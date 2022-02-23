@@ -1,0 +1,10 @@
+api/node_modules
+api/public/images/avatars/*
+api/public/images/barang/*
+
+inventaris/node_modules
+inventaris/.DS_Store
+inventaris/.vscode
+inventaris/dist
+inventaris/dist-ssr
+inventaris/*.local
