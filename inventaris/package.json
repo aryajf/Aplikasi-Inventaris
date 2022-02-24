@@ -1,12 +1,13 @@
 {
   "name": "inventaris",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite --port=8080 --host",
     "build": "vite build",
     "preview": "vite preview --port=8080 --host"
   },
   "dependencies": {
+    "@aacassandra/vue3-progressbar": "^1.0.3",
     "aos": "^2.3.4",
     "axios": "^0.26.0",
     "bootstrap": "^5.1.3",
