@@ -28,7 +28,7 @@ module.exports = {
             res.status(404).json({email: userReq.email, message: 'User tidak terdaftar', status: false})
         }else{
             if(!verifyPassword(userReq.password, user.password)){
-                res.status(400).json({message: 'Kombinasi email dan password gk sesuai', status: false})
+                res.status(400).json({message: 'Email & Password tidak sesuai', status: false})
                 return
             }
 

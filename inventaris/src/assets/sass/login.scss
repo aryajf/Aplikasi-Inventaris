@@ -1,0 +1,47 @@
+@import 'style';
+.login{
+    height: 100vh;
+    .login-left{
+        display: flex;
+        align-items: center;
+        h1{
+            text-align: center;
+            font-family: $fontZcool;
+            font-weight: bold;
+            font-size: 60px;
+            color:$white;
+        }
+    }
+    .login-right{
+        display: flex;
+        align-items: center;
+        img{
+            width: 30%;
+            display: block;
+            margin: 0 auto;
+        }
+        h1{
+            text-align: center;
+            font-family: $fontKarla;
+            color: $grey;
+        }
+        .box{
+            width: 80%;
+            margin: 0 auto;
+            form{
+                button{
+                    padding: 32px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .login{
+        height: 100vh;
+        .login-left{
+            display: none;
+        }
+    }
+}

@@ -21,15 +21,24 @@
             </div>
         </div>
 
+        <!-- DASHBOARD MENU -->
+        <div v-if="this.$route.name != 'not-found'">
+            <div v-if="authenticated">
+                <Dashboard/>
+            </div>
+            <router-view v-else></router-view>
+        </div>
+        <router-view v-else></router-view>
+
         <!-- PROGRESS BAR -->
         <vue-progress-bar></vue-progress-bar>
 
-        <router-view></router-view>
     </div>
 </template>
 <script>
 import { mapGetters } from "vuex"
 import appConfig from "@/config/app"
+import Dashboard from '@/components/layouts/Dashboard.vue'
 import { Modal } from "bootstrap"
 export default {
     setup() {
@@ -48,24 +57,25 @@ export default {
             authenticated: "auth/authenticated",
         }),
     },
+    components: { Dashboard },
     mounted() {
-        // this.$Progress.finish()
+        this.$Progress.finish()
     },
     created() {
-        // this.$Progress.start()
+        this.$Progress.start()
 
-        // this.$router.beforeEach((to, from, next) => {
-        //     if (to.meta.progress !== undefined) {
-        //         let meta = to.meta.progress
-        //         this.$Progress.parseMeta(meta)
-        //     }
-        //     this.$Progress.start()
-        //     next()
-        // })
+        this.$router.beforeEach((to, from, next) => {
+            if (to.meta.progress !== undefined) {
+                let meta = to.meta.progress
+                this.$Progress.parseMeta(meta)
+            }
+            this.$Progress.start()
+            next()
+        })
 
-        // this.$router.afterEach((to, from) => {
-        //     this.$Progress.finish()
-        // })
+        this.$router.afterEach((to, from) => {
+            this.$Progress.finish()
+        })
     },
     methods: {
         checkToken() {

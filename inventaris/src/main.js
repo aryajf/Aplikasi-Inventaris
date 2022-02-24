@@ -38,6 +38,7 @@ import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
 import RadioButton from 'primevue/radiobutton'
 import ProgressBar from 'primevue/progressbar'
+import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
 import Paginator from 'primevue/paginator'
 import Skeleton from 'primevue/skeleton'
@@ -49,8 +50,8 @@ axios.defaults.baseURL = appConfig.apiURL
 // Progressbar Loading
 import VueProgressBar from "@aacassandra/vue3-progressbar"
 const options = {
-    color: "#2ecc71",
-    failedColor: "#AA0022",
+    color: "#8463FF",
+    failedColor: "#EC615B",
     thickness: "5px",
     transition: {
         speed: "0.2s",
@@ -71,5 +72,5 @@ import Mixins from "@/mixins"
 import '@/store/subscriber'
 
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
-    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
+    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("InputText", InputText).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
 })
