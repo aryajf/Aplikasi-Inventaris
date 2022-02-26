@@ -4,7 +4,7 @@ const path = require('path')
 const barangGambarPath = path.join(__dirname, '../public/images/barang/')
 const Validator = require('validatorjs')
 const validatorMessage = require('../config/validatorMessage')
-const {compressImage, deleteFile, makeDirectory, createSlug, getPagination, getPagingData} = require('../config/mixins')
+const {compressImage, deleteFile, makeDirectory, checkSlug, createSlug, getPagination, getPagingData} = require('../config/mixins')
 
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
         let categoryName = 'Semua Barang'
 
         if(category){
-            let categoryData = await Category.findOne({where: {id: category, type: 'Barang'}})
+            let categoryData = await Category.findOne({where: {category_id: category}})
             if(categoryData == null){
                 return res.status(404).json({message : 'Kategori tidak ditemukan', status: false})
             }
@@ -173,11 +173,13 @@ module.exports = {
 
         let barangReq = {
             title: req.body.title,
+            description: req.body.description,
             slug: slug,
             gambar: '',
             category_id: req.body.category_id,
         }
 
+        
         !req.file ? barangReq.gambar = null : barangReq.gambar = req.file.filename
         if(barangValidation(barangReq) != null){
             res.status(400).send(barangValidation(barangReq))
@@ -186,14 +188,14 @@ module.exports = {
             }
             return
         }
-        
+
         try{
             let checkSlug = await Barang.findOne({where: {slug: barangReq.slug}})
             if(checkSlug){
                 barangReq.slug = createSlug(title) + '-' + 1
             }
-            
             let barang = await Barang.create(barangReq)
+            
             
             // Untuk tipe Dasar
             await Status.create({location: 'Dasar',status: 'Tersedia',stok: 0,barang_id: barang.id})
@@ -214,6 +216,10 @@ module.exports = {
             makeDirectory(barangGambarPath)
             compressImage('public/uploads/'+req.file.filename, barangGambarPath, req.file.path)
             res.status(201).json({
+                data: {
+                    id: barang.id,
+                    title: barang.title,
+                },
                 message: 'Item berhasil ditambah',
                 request: {
                     method: req.method,
@@ -222,6 +228,7 @@ module.exports = {
                 status: true,
             })
         }catch(err){
+            console.log(err)
             deleteFile(req.file.path)
             res.status(400).json({
                 error: err.message,
@@ -242,6 +249,7 @@ module.exports = {
 
         let barangReq = {
             title: req.body.title,
+            description: req.body.description,
             gambar: '',
             category_id: req.body.category_id ? req.body.category_id : categoryId,
         }
@@ -362,6 +370,7 @@ async function getBarang(limit, offset, category, keyword){
 function barangValidation(dataRequest){
     let rules = {
         title: 'required|min:3',
+        description: 'required|min:3',
         gambar: 'required',
         category_id: 'required',
     }

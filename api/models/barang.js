@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Barang.init({
     title: DataTypes.STRING,
+    description: DataTypes.TEXT,
     slug: DataTypes.STRING,
     gambar: DataTypes.STRING,
     category_id: DataTypes.INTEGER

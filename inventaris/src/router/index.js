@@ -34,11 +34,128 @@ const routes = [
     },
   },
   {
+    path: '/category',
+    name: 'List Category',
+    component: () => import(/* webpackChunkName: "category" */ '../views/Category/Category.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/category/edit/:id',
+    name: 'Update Category',
+    component: () => import(/* webpackChunkName: "category" */ '../views/Category/Update.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Asisten'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/barang',
+    name: 'List Barang',
+    component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Barang.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Asisten'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
     path: '/barang/create',
     name: 'Create Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Create.vue'),
     beforeEnter: (to, from, next) => {
       if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Asisten'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/barang/edit/:id',
+    name: 'Update Barang',
+    component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Update.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Asisten'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/barang/:id',
+    name: 'Show Barang',
+    component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Show.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/user',
+    name: 'List User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/User/User.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Admin'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/user/create',
+    name: 'Create User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/User/Create.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Admin'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/user/update',
+    name: 'Update User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/User/Update.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Admin'){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/user/:id',
+    name: 'Show User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/User/Show.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Admin'){
         return next({
           name : 'not-found'
         })

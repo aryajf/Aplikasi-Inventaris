@@ -59,20 +59,24 @@
                                     </router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link to="/shop" class="nav-link">
-                                        <i class="uil uil-store me-2"></i> Shop
-                                    </router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <router-link to="/proposal/accepted" class="nav-link">
-                                        <i class="uil uil-history me-2"></i> Riwayat Pembelian
-                                    </router-link>
-                                </li>
-                                <li class="nav-item">
                                     <router-link to="/user" class="nav-link">
                                         <i class="uil uil-users-alt me-2"></i> Users
                                     </router-link>
                                 </li>
+
+                                <p class="nav-heading">ITEMS</p>
+                                <li class="nav-item">
+                                    <router-link to="/barang/create" class="nav-link">
+                                        <i class="uil uil-plus me-2"></i> Tambah Item
+                                    </router-link>
+                                </li>
+                                <template v-if="barang.totalItems !== 0">
+                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
+                                        <router-link :to="'/barang/'+item.id" class="nav-link">
+                                            <i class="uil uil-box me-2"></i> {{ item.title }}
+                                        </router-link>
+                                    </li>
+                                </template>
                             </ul>
                         </div>
                     </div>
@@ -146,15 +150,12 @@
                                                     </router-link>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <router-link to="/shop" class="nav-link">
-                                                        <i class="uil uil-store me-2"></i> Shop
+                                                    <router-link to="/user" class="nav-link">
+                                                        <i class="uil uil-users-alt me-2"></i> Users
                                                     </router-link>
                                                 </li>
-                                                <li class="nav-item">
-                                                    <router-link to="/proposal/accepted" class="nav-link">
-                                                        <i class="uil uil-history me-2"></i> Riwayat Pembelian
-                                                    </router-link>
-                                                </li>
+
+                                                <p class="nav-heading">ITEMS</p>
                                                 <li class="nav-item">
                                                     <router-link to="/user" class="nav-link">
                                                         <i class="uil uil-users-alt me-2"></i> Users
@@ -178,9 +179,21 @@
                                 </router-link>
                             </li>
                             <li>
-                                <router-link to="/shop">
-                                    <span class="icon"><i class="uil uil-store"></i></span>
-                                    <span class="title">Shop</span>
+                                <router-link to="/category">
+                                    <span class="icon"><i class="uil uil-tag-alt"></i></span>
+                                    <span class="title">Category</span>
+                                </router-link>
+                            </li>
+                            <li>
+                                <router-link to="/user">
+                                    <span class="icon"><i class="uil uil-user"></i></span>
+                                    <span class="title">Users</span>
+                                </router-link>
+                            </li>
+                            <li>
+                                <router-link to="#" data-bs-toggle="modal" data-bs-target="#signoutModal">
+                                    <span class="icon"><i class="uil uil-sign-out-alt"></i></span>
+                                    <span class="title">Logout</span>
                                 </router-link>
                             </li>
                             <li>
@@ -219,7 +232,11 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user',
+            barang: 'barang/all_barang'
         }),
+    },
+    created(){
+        this.$store.dispatch('barang/getBarang')
     },
     components: { LogoutModal },
 }

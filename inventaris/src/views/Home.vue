@@ -3,10 +3,10 @@
         <div class="bg-light p-4 rounded">
             <h4 data-aos="flip-right" class="alert-heading mb-3">Halo {{ user.role }} 👋</h4>
             <p>
-                Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
+                Halo {{ user.nama }}, selamat datang di aplikasi inventaris psikologi
             </p>
             <hr>
-            <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+            <p class="mb-0">Disini kamu sebagai {{ user.role }} dapat kelola seluruh barang yang dibutuhkan semisal alat tulis dan sebagainya.</p>
         </div>
     </div>
 </template>
@@ -21,5 +21,5 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "@/assets/sass/home.scss";
+@import "@/assets/sass/app.scss";
 </style>

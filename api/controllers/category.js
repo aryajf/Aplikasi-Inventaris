@@ -28,7 +28,7 @@ module.exports = {
                     },
                     status: true
                 })
-            }else{res.json({totalItems : 0, data: dataPaginate, message : 'Belum ada Status', status: false})}
+            }else{res.json({totalItems : 0, data: dataPaginate, message : 'Belum ada Kategori', status: false})}
         }).catch((err) => {
             res.status(404).json({message : 'Status tidak ditemukan', status: false})
         })
@@ -186,12 +186,12 @@ async function getCategory(limit, offset, keyword){
             where: {
                 title:{}
             },
-            limit,offset,order:[['updatedAt', 'ASC']]
+            limit,offset,order:[['updatedAt', 'DESC']]
         }
     }else{
         statement = {
             where: {},
-            limit,offset,order:[['updatedAt', 'ASC']]
+            limit,offset,order:[['updatedAt', 'DESC']]
         }
     }
     

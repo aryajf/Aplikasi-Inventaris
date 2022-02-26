@@ -8,10 +8,12 @@ const auth = require('../controllers/auth')
 const barang = require('../controllers/barang')
 const category = require('../controllers/category')
 const status = require('../controllers/status')
+const user = require('../controllers/user')
 
 // CALL MIDDLEWARE
 const checkAuth = require('../middleware/checkAuth')
 const fileUpload = require('../middleware/fileUpload')
+const isAdmin = require('../middleware/isAdmin')
 
 router.get('/', async function(req, res, next) {
   let email = 'admin@gmail.com'
@@ -76,5 +78,15 @@ router.route('/status')
 router.route('/status/:id')
   .get(status.show)
   .put(checkAuth, status.update)
+
+// ADMIN
+router.route('/user')
+  .get(checkAuth, isAdmin, user.getUsers)
+  .post(checkAuth, isAdmin, user.createUser)
+router.route('/user/search/:keyword')
+    .get(checkAuth, isAdmin, user.searchUsers)
+router.route('/user/:id')
+  .get(checkAuth, isAdmin, user.showUsers)
+  .delete(checkAuth, isAdmin, user.deleteUser)
   
 module.exports = router

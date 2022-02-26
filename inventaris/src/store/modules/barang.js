@@ -29,12 +29,11 @@ export default({
         },
     },
     actions: {
-        async index({commit}, page){
+        async getBarang({commit}, data){
             try{
                 let res
-                page == null ? res = await axios.get('barang') : res = await axios.get(`barang?page=${page}`)
+                data == null ? res = await axios.get('barang') : res = await axios.get(`barang?page=${data.page}`)
                 commit('SET_ALL_BARANG', res.data)
-                commit('SET_ALL_BARANG_SLIDER', res.data)
                 return res.data
             }catch(err){
                 return err
@@ -62,16 +61,16 @@ export default({
                 return err
             }
         },
-        async create({commit, dispatch}, credentials){
+        async storeBarang({commit, dispatch}, credentials){
             commit('SET_BUTTON_LOADING', true, {root: true})
             commit('SET_FORM_ERRORS', [], {root: true})          
             try{
-                 let response = await axios.post('barang', credentials)
-                dispatch('index')
+                let response = await axios.post('barang', credentials)
+                dispatch('getBarang')
                 setTimeout(function () {
                     window.notyf.success(response.data.message)
                     commit('SET_BUTTON_LOADING', false, {root: true})        
-                    router.push('/barang')
+                    router.push(`/barang/${response.data.data.id}`)
                 }, 3000)
                 return response
             }catch(err){
@@ -90,7 +89,7 @@ export default({
             commit('SET_FORM_ERRORS', [], {root: true})
             try{
                 await axios.put(`barang/${slug}`, credentials).then(response =>{
-                    dispatch('index')
+                    dispatch('getBarang')
                     setTimeout(function () {
                         window.notyf.success(response.data.message)
                         commit('SET_BUTTON_LOADING', false, {root: true})        
@@ -118,7 +117,7 @@ export default({
                 if(state.barang.length == 1){
                     commit('REMOVE_BARANG', slug)
                 }
-                dispatch("index")
+                dispatch("getBarang")
                 return response
             }catch(err){
                 commit('SET_BUTTON_LOADING', false, {root: true})

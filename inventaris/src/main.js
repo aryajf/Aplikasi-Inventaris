@@ -63,6 +63,9 @@ const options = {
     inverse: false,
 }
 
+// Vue Cropper
+import 'cropperjs/dist/cropper.css'
+
 // Notyf
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css'
