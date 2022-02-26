@@ -87,74 +87,7 @@ module.exports = {
     show: async(req, res) => {
         try{
             const barang = await findBarang(req.params.slug)
-            const wisata_comments = await Comment.findAll({
-                where: {
-                    type: 'Barang',
-                    produk_id: barang.id
-                },
-                order:[['updatedAt', 'DESC']],
-                include: [{
-                    model: User,
-                    as: 'user',
-                }]
-            })
-            let comments_length = 0
-            let comments = []
-            if(wisata_comments.length != 0){
-                wisata_comments.map(item => {
-                    if(!item.kode.includes('ADMIN-') && item.status == 'Accepted'){
-                        if(item.user){
-                            comments.push({
-                                id: item.kode,
-                                nama: item.user.nama,
-                                avatar: item.user.avatar,
-                                auth_type: item.user.auth_type,
-                                isAnonymous: item.isAnonymous,
-                                messages: item.messages,
-                                produk_id: item.produk_id,
-                                createdAt: item.createdAt,
-                                updatedAt: item.updatedAt,
-                                reply_comments: []
-                            })
-                        }else{
-                            comments.push({
-                                id: item.kode,
-                                nama: 'Pojoklaku Member',
-                                avatar: null,
-                                auth_type: 'Local',
-                                isAnonymous: item.isAnonymous,
-                                messages: item.messages,
-                                createdAt: item.createdAt,
-                                updatedAt: item.updatedAt,
-                                reply_comments: []
-                            })
-                        }
-                        comments_length++
-                    }
-                })
-
-                wisata_comments.map(item => {
-                    if(item.kode.includes('ADMIN-')){
-                        comments.map(itemComment => {
-                            if (itemComment.id === item.reply_kode) {
-                                itemComment.reply_comments.push({
-                                    id: item.kode,
-                                    nama: item.user.nama,
-                                    avatar: item.user.avatar,
-                                    isAnonymous: item.isAnonymous,
-                                    messages: item.messages,
-                                    createdAt: item.createdAt,
-                                    updatedAt: item.updatedAt,
-                                })
-                            }
-                        })
-                        comments_length++
-                    }
-                })
-            }
             res.json({
-                comments_length: comments_length,
-                comments: comments,
                 barang : barang,
                 message: 'Item berhasil ditampilkan',
                 request: {
@@ -217,7 +150,7 @@ module.exports = {
             compressImage('public/uploads/'+req.file.filename, barangGambarPath, req.file.path)
             res.status(201).json({
                 data: {
-                    id: barang.id,
+                    slug: barang.slug,
                     title: barang.title,
                 },
                 message: 'Item berhasil ditambah',
@@ -323,10 +256,13 @@ module.exports = {
 }
 
 function findBarang(slug){
-    return Barang.findOne({where: {slug: slug}, include: {
+    return Barang.findOne({where: {slug: slug}, include: [{
+        model : Status,
+        as: 'status'
+    },{
         model : Category,
         as: 'category'
-    },})
+    }]})
 }
 
 async function getBarang(limit, offset, category, keyword){

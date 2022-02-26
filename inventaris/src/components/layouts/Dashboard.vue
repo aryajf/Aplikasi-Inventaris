@@ -65,18 +65,18 @@
                                 </li>
 
                                 <p class="nav-heading">ITEMS</p>
+                                <template v-if="barang.totalItems !== 0">
+                                    <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
+                                        <router-link :to="'/barang/'+item.slug" class="nav-link">
+                                            <i class="uil uil-box me-2"></i> {{ item.title }}
+                                        </router-link>
+                                    </li>
+                                </template>
                                 <li class="nav-item">
                                     <router-link to="/barang/create" class="nav-link">
                                         <i class="uil uil-plus me-2"></i> Tambah Item
                                     </router-link>
                                 </li>
-                                <template v-if="barang.totalItems !== 0">
-                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
-                                        <router-link :to="'/barang/'+item.id" class="nav-link">
-                                            <i class="uil uil-box me-2"></i> {{ item.title }}
-                                        </router-link>
-                                    </li>
-                                </template>
                             </ul>
                         </div>
                     </div>
@@ -156,9 +156,16 @@
                                                 </li>
 
                                                 <p class="nav-heading">ITEMS</p>
+                                                <template v-if="barang.totalItems !== 0">
+                                                    <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
+                                                        <router-link :to="'/barang/'+item.slug" class="nav-link">
+                                                            <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                        </router-link>
+                                                    </li>
+                                                </template>
                                                 <li class="nav-item">
-                                                    <router-link to="/user" class="nav-link">
-                                                        <i class="uil uil-users-alt me-2"></i> Users
+                                                    <router-link to="/barang/create" class="nav-link">
+                                                        <i class="uil uil-plus me-2"></i> Tambah Item
                                                     </router-link>
                                                 </li>
                                             </ul>

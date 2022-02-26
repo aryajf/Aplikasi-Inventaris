@@ -1,27 +1,49 @@
 <template>
     <div>
-        <!-- <router-link :to="'/barang/edit/'+this.route.params.id">Update</router-link> -->
-        {{ url }}
+        <div class="container-fluid">
+            <div class="row">
+                <router-link :to="'/barang/edit/'+url">Update</router-link>
+            </div>
+            <div class="barang-box">
+                <div class="row">
+                    {{ barang }}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
-    mounted(){
-        this.url = this.$route.params.id;
-    },
     data(){
         return{
             url: null
         };
     },
-    created() {
-    this.$watch(
-        () => this.$route.params,
-            (toParams, previousParams) => {
-                this.url = this.$route.params.id;
-            }
-        )
+    computed: {
+        ...mapGetters({
+            btnLoading: "btnLoading",
+            formErrors: "formErrors",
+            barang: "barang/barang",
+        }),
     },
+    mounted(){
+        this.url = this.$route.params.slug;
+        this.getBarang()
+    },
+    created() {
+        this.$watch(
+            () => this.$route.params,
+                () => {
+                    this.url = this.$route.params.slug;
+                }
+            )
+    },
+    methods: {
+        getBarang() {
+            this.$store.dispatch("barang/show", this.$route.params.slug)
+    },
+    }
 }
 </script>
 <style lang="scss">

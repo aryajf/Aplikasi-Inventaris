@@ -70,7 +70,7 @@ export default({
                 setTimeout(function () {
                     window.notyf.success(response.data.message)
                     commit('SET_BUTTON_LOADING', false, {root: true})        
-                    router.push(`/barang/${response.data.data.id}`)
+                    router.push(`/barang/${response.data.data.slug}`)
                 }, 3000)
                 return response
             }catch(err){
@@ -84,7 +84,7 @@ export default({
                 return err.response
             }
         },
-        async update({commit, dispatch}, [slug, credentials]){
+        async updateBarang({commit, dispatch}, [slug, credentials]){
             commit('SET_BUTTON_LOADING', true, {root: true})
             commit('SET_FORM_ERRORS', [], {root: true})
             try{
@@ -93,7 +93,7 @@ export default({
                     setTimeout(function () {
                         window.notyf.success(response.data.message)
                         commit('SET_BUTTON_LOADING', false, {root: true})        
-                        router.push('/barang')
+                        router.push(`/barang/${response.data.data.slug}`)
                     }, 3000)
                     return response
                 })
@@ -108,7 +108,7 @@ export default({
                 return err.response
             }
         },
-        async delete({state,commit, dispatch}, slug){
+        async deleteBarang({state,commit, dispatch}, slug){
             commit('SET_BUTTON_LOADING', true, {root: true})
             try{
                 let response = await axios.delete(`barang/${slug}`)

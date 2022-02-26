@@ -86,7 +86,7 @@ const routes = [
     },
   },
   {
-    path: '/barang/edit/:id',
+    path: '/barang/edit/:slug',
     name: 'Update Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Update.vue'),
     beforeEnter: (to, from, next) => {
@@ -99,7 +99,7 @@ const routes = [
     },
   },
   {
-    path: '/barang/:id',
+    path: '/barang/:slug',
     name: 'Show Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Show.vue'),
     beforeEnter: (to, from, next) => {
