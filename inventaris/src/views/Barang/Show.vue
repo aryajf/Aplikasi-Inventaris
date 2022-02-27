@@ -21,19 +21,19 @@
                 <div class="row mt-5" v-if="barang.status">
                     <div class="col-md-4 col-12 mb-3">
                         <div class="count-box d-flex justify-content-between align-items-center bg-az">
-                            <div>Total Lab Dasar</div>
+                            <div>Total Stok Lab Dasar</div>
                             <div class="stock">{{ dasar_count }}</div>
                         </div>
                     </div>
                     <div class="col-md-4 col-12 mb-3">
                         <div class="count-box d-flex justify-content-between align-items-center bg-purple">
-                            <div>Total Lab Menengah</div>
+                            <div>Total Stok Lab Menengah</div>
                             <div class="stock">{{ menengah_count }}</div>
                         </div>
                     </div>
                     <div class="col-md-4 col-12 mb-3">
                         <div class="count-box d-flex justify-content-between align-items-center bg-ed">
-                            <div>Total Lab Lanjut</div>
+                            <div>Total Stok Lab Lanjut</div>
                             <div class="stock">{{ lanjut_count }}</div>
                         </div>
                     </div>
