@@ -39,6 +39,7 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import RadioButton from 'primevue/radiobutton'
 import ProgressBar from 'primevue/progressbar'
 import InputText from 'primevue/inputtext'
+import InputNumber from 'primevue/inputnumber'
 import Message from 'primevue/message'
 import Paginator from 'primevue/paginator'
 import Skeleton from 'primevue/skeleton'
@@ -75,5 +76,5 @@ import Mixins from "@/mixins"
 import '@/store/subscriber'
 
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
-    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("InputText", InputText).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
+    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("InputNumber", InputNumber).component("InputText", InputText).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
 })

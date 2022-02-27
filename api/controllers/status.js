@@ -74,7 +74,7 @@ module.exports = {
                     status: statuses.status,
                     stok: statuses.stok,
                 },
-                message: 'Item berhasil diubah',
+                message: 'Stok berhasil diubah',
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'statuses/' + req.params.id

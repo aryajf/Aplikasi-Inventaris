@@ -1,0 +1,32 @@
+@import 'admin';
+@import 'style';
+.barang-box {
+    padding: 20px;
+}
+
+.barang-box-heading {
+    color: #323B46;
+}
+
+.barang-box-heading h2, .barang-box-heading h5 {
+    color: $purple;
+}
+
+.barang-box-heading>p::first-letter {
+    text-transform: capitalize;
+}
+
+.barang-box-heading>p>a {
+    text-decoration: none;
+}
+
+.barang-box{
+    .count-box{
+        padding: 20px;
+        font-weight: bold;
+        .stock{
+            background-color: rgba($color: #000000, $alpha: 0.2);
+            padding: 5px 10px;
+        }
+    }
+}
