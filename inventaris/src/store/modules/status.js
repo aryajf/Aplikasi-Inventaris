@@ -12,6 +12,7 @@ export default({
             commit('SET_FORM_ERRORS', [], {root: true})
             let update = await axios.put(`status/${data.id}`, {stok:data.stok}).then(response =>{
                 dispatch('barang/getBarang', null, { root: true })
+                commit('SET_BUTTON_LOADING', false, {root: true})
                 window.notyf.success(response.data.message)
                 return response
             }).catch(err => {

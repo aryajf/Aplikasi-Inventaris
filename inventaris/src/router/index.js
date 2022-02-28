@@ -34,6 +34,32 @@ const routes = [
     },
   },
   {
+    path: '/lab',
+    name: 'Semua Lab',
+    component: () => import(/* webpackChunkName: "Semua Lab" */ '../views/Lab/Lab.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name : 'Login'
+        })
+      }
+      next()
+    },
+  },
+  {
+    path: '/lab/:type',
+    name: 'Show Lab',
+    component: () => import(/* webpackChunkName: "Show Lab" */ '../views/Lab/Show.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name : 'Login'
+        })
+      }
+      next()
+    },
+  },
+  {
     path: '/category',
     name: 'List Category',
     component: () => import(/* webpackChunkName: "category" */ '../views/Category/Category.vue'),

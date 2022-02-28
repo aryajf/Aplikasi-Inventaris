@@ -17,7 +17,7 @@ export default {
         ...mapGetters({
             user: 'auth/user',
         }),
-    }
+    },
 }
 </script>
 <style lang="scss">

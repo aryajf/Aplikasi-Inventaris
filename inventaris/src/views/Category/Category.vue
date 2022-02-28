@@ -57,7 +57,6 @@
                                 <tr>
                                     <th scope="col" class="th-1">#</th>
                                     <th scope="col" class="th-5"><i class="uil uil-tag-alt me-2"></i>Nama Kategori</th>
-                                    <th scope="col" class="th-5"><i class="uil uil-apps me-2"></i>Produk</th>
                                     <th scope="col" class="th-10"><i class="uil uil-calendar-alt me-2"></i>Tanggal</th>
                                     <th scope="col" class="th-aksi">Aksi</th>
                                 </tr>
@@ -67,9 +66,6 @@
                                     <td class="fw-bold text-center">{{ index+1 }}</td>
                                     <td>
                                         {{item.title}}
-                                    </td>
-                                    <td>
-                                        {{item.type}}
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-dark text-start me-3">Dibuat: <span class="d-block">{{DateFormat(item.createdAt)}}</span></span>

@@ -32,6 +32,7 @@ import "primevue/resources/themes/saga-blue/theme.css"
 import "primevue/resources/primevue.min.css"
 import "primeicons/primeicons.css"
 import Button from 'primevue/button';
+import Chart from 'primevue/chart'
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown'
 import ConfirmationService from 'primevue/confirmationservice'
@@ -76,5 +77,5 @@ import Mixins from "@/mixins"
 import '@/store/subscriber'
 
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
-    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("InputNumber", InputNumber).component("InputText", InputText).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
+    createApp(App).use(store).use(router).use(PrimeVue).mixin(Mixins).use(VueProgressBar, options).use(ConfirmationService).component('Button',Button).component('Chart',Chart).component("Dialog", Dialog).component("Dropdown", Dropdown).component("ConfirmDialog", ConfirmDialog).component("InputNumber", InputNumber).component("InputText", InputText).component("ProgressBar", ProgressBar).component("RadioButton", RadioButton).component("Message", Message).component("Paginator", Paginator).component("Skeleton", Skeleton).mount('#app')
 })

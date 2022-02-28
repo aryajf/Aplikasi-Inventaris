@@ -100,6 +100,10 @@ async function getStatuses(limit, offset, location, status){
 
     statement = {
         where: {},
+        include: {
+            model: Barang,
+            as: 'barang'
+        },
         limit,offset,order:[['updatedAt', 'ASC']]
     }
     
