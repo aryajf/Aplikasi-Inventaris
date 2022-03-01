@@ -15,13 +15,13 @@
                                                 Nama Kategori
                                                 <span class="text-danger text-sm" v-if="formErrors.title">*{{formErrors.title[0]}}</span>
                                             </label>
-                                            <input type="text" class="form-control" :class="{'is-invalid': formErrors.title && formErrors.title.length > 0}" placeholder="Masukkan judul" v-model="form.title">
+                                            <input type="text" class="form-control" :class="{'is-invalid': formErrors.title && formErrors.title.length > 0}" placeholder="Masukkan nama kategori" v-model="form.title">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         <button type="submit" class="btn bg-wa btn-sm d-flex mt-1" :disabled="btnLoading">
-                            <i class="uil uil-plus"></i> Buat Kategori
+                            <i class="uil uil-plus"></i> Tambah Kategori
                             <template v-if="btnLoading">
                                 <Pulse />
                             </template>

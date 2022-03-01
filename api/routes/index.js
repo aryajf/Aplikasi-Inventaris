@@ -8,6 +8,7 @@ const auth = require('../controllers/auth')
 const barang = require('../controllers/barang')
 const chart = require('../controllers/chart')
 const category = require('../controllers/category')
+const pdf = require('../controllers/pdf')
 const status = require('../controllers/status')
 const user = require('../controllers/user')
 
@@ -48,6 +49,12 @@ router.put('/profile/updateAvatar', checkAuth, fileUpload.single('avatar'), auth
 router.post('/password/forgot', auth.forgotPasswordRequest)
 router.put('/password/update/:email/:token', auth.updatePassword)
 router.post('/password/change', checkAuth, auth.changePassword)
+
+// PDF
+router.route('/pdf')
+  .get(pdf.index)
+router.route('/pdf/:type')
+  .get(pdf.show)
 
 // BARANG
 router.route('/barang')

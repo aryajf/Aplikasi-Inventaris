@@ -1,9 +1,11 @@
 <template>
     <div>
+        <DeleteModal v-if="barang" :barang_slug="barang.slug"></DeleteModal>
         <div class="container-fluid" v-if="barang">
             <div class="barang-box mb-3 bg-light rounded-top">
-                <div v-if="user.role === 'Asisten'" class="row mb-2">
+                <div v-if="user.role === 'Asisten'" class="d-flex justify-content-between align-items-center mb-2">
                     <router-link :to="'/barang/edit/'+url">Ubah Barang</router-link>
+                    <a href="#" class="text-danger fs-4" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="uil uil-trash-alt"></i></a>
                 </div>
                 <div class="row">
                     <div class="col-md-4 col-12">
@@ -52,6 +54,7 @@
     </div>
 </template>
 <script>
+import DeleteModal from '@/components/modals/Delete.vue'
 import { mapGetters } from "vuex"
 import config from "@/config/app"
 export default {
@@ -64,6 +67,7 @@ export default {
             lanjut_count: 0,
         };
     },
+    components: {DeleteModal},
     computed: {
         ...mapGetters({
             btnLoading: "btnLoading",

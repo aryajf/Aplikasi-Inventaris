@@ -56,6 +56,28 @@ export default createStore({
       })
 
       return categories
+    },
+    async downloadPdf({commit}){
+      commit('SET_BUTTON_LOADING', true, {root: true})
+      let pdf = await axios.get(`pdf`).then(res => {
+        commit('SET_BUTTON_LOADING', false, {root: true})
+        return window.location.href = res.data.pdf;
+      }).catch(err => {
+        commit('SET_BUTTON_LOADING', false, {root: true})
+        return err.response
+      })
+      return pdf
+    },
+    async downloadPdfShow({commit}, url){
+      commit('SET_BUTTON_LOADING', true, {root: true})
+      let pdf = await axios.get(`pdf/${url}`).then(res => {
+        commit('SET_BUTTON_LOADING', false, {root: true})
+        return window.location.href = res.data.pdf;
+      }).catch(err => {
+        commit('SET_BUTTON_LOADING', false, {root: true})
+        return err.response
+      })
+      return pdf
     }
   },
   getters: {

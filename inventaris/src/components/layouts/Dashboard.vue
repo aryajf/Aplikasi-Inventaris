@@ -85,7 +85,8 @@
                                     </router-link>
                                 </li>
 
-                                <p class="nav-heading">ITEMS</p>
+                                <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
+                                <p class="nav-heading" v-if="user.role == 'Asisten'">ITEMS</p>
                                 <template v-if="barang.totalItems !== 0">
                                     <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
                                         <router-link :to="'/barang/'+item.slug" class="nav-link">
@@ -155,7 +156,22 @@
                                                 <p class="nav-heading">LAB MENU</p>
                                                 <li class="nav-item">
                                                     <router-link to="/lab" class="nav-link">
-                                                        <i class="uil uil-estate me-2"></i> Semua Lab
+                                                        <i class="uil uil-edit me-2"></i> Semua Lab
+                                                    </router-link>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <router-link to="/lab/dasar" class="nav-link">
+                                                        <i class="uil uil-edit-alt me-2"></i> Lab Dasar
+                                                    </router-link>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <router-link to="/lab/menengah" class="nav-link">
+                                                        <i class="uil uil-edit-alt me-2"></i> Lab Menengah
+                                                    </router-link>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <router-link to="/lab/lanjut" class="nav-link">
+                                                        <i class="uil uil-edit-alt me-2"></i> Lab Lanjut
                                                     </router-link>
                                                 </li>
                                                 <p class="nav-heading">AUTH</p>
@@ -171,7 +187,7 @@
                                                 </li>
 
                                                 <p class="nav-heading">APPS</p>
-                                                <li class="nav-item">
+                                                <li class="nav-item" v-if="user.role === 'Asisten'">
                                                     <router-link to="/category" class="nav-link">
                                                         <i class="uil uil-tag-alt me-2"></i> Category
                                                     </router-link>
@@ -182,7 +198,8 @@
                                                     </router-link>
                                                 </li>
 
-                                                <p class="nav-heading">ITEMS</p>
+                                                <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
+                                                <p class="nav-heading" v-if="user.role == 'Asisten'">ITEMS</p>
                                                 <template v-if="barang.totalItems !== 0">
                                                     <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
                                                         <router-link :to="'/barang/'+item.slug" class="nav-link">
@@ -190,7 +207,7 @@
                                                         </router-link>
                                                     </li>
                                                 </template>
-                                                <li class="nav-item">
+                                                <li class="nav-item" v-if="user.role === 'Asisten'">
                                                     <router-link to="/barang/create" class="nav-link">
                                                         <i class="uil uil-plus me-2"></i> Tambah Item
                                                     </router-link>

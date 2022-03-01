@@ -1,7 +1,16 @@
 <template>
     <div>
-        <h4 class="text-center my-3">Jumlah barang berada di kategori</h4>
-        <Chart type="pie" :data="productData" />
+        <template v-if="productData">
+            <template class="row d-flex justify-content-center" v-if="productData.labels.length != 0">
+                <div class="col-md-5">
+                    <h4 class="text-center my-3">Jumlah barang yang berada di kategori</h4>
+                    <Chart type="pie" :data="productData" />
+                </div>
+            </template>
+            <template v-else>
+                <Message :closable="false" severity="info">Kategori belum ditambahkan</Message>
+            </template>
+        </template>
     </div>
 </template>
 

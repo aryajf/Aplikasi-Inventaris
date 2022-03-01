@@ -86,19 +86,6 @@ const routes = [
     },
   },
   {
-    path: '/barang',
-    name: 'List Barang',
-    component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Barang.vue'),
-    beforeEnter: (to, from, next) => {
-      if(!store.getters['auth/authenticated'] || store.getters['auth/user'].role != 'Asisten'){
-        return next({
-          name : 'not-found'
-        })
-      }
-      next()
-    },
-  },
-  {
     path: '/barang/create',
     name: 'Create Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Create.vue'),

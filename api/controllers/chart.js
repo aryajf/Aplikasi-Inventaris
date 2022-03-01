@@ -79,6 +79,18 @@ module.exports = {
             order:[['updatedAt', 'ASC']]
         }).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
+
+            dataPaginate.map(barang => {
+                barang.dataValues.tersedia = 0
+                barang.dataValues.dipakai = 0
+                barang.dataValues.rusak = 0
+                barang.status.map(status => {
+                    if(status.status == 'Tersedia') barang.dataValues.tersedia = status.stok
+                    if(status.status == 'Dipakai') barang.dataValues.dipakai = status.stok
+                    if(status.status == 'Rusak') barang.dataValues.rusak = status.stok
+                })
+                delete barang.dataValues.status
+            })
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
                 res.json({

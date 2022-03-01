@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -61,6 +61,7 @@ export default {
             this.$store.dispatch('barang/deleteBarang', slug).then((res) => {
                 if (res.status === 200) {
                     this.$refs.modalClose.click()
+                    this.$router.push('/lab')
                 }
             })
         },

@@ -43,7 +43,7 @@ export default{
             commit('SET_FORM_ERRORS', {}, {root: true})
             commit('SET_BUTTON_LOADING', true, {root: true})
             let create = await axios.post('user', credentials).then(res => {
-                commit('SET_BUTTON_LOADING', false, {root: true})        
+                commit('SET_BUTTON_LOADING', false, {root: true})
                 window.notyf.success(res.data.message)
                 dispatch('getUsers')
                 return res

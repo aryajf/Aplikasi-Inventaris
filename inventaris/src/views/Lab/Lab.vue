@@ -1,13 +1,14 @@
 <template>
     <div class="bg-white admin-wrapper">
         <AdminHeader />
-        <div class="row d-flex justify-content-around">
-            <div class="col-12 col-md-5 mb-3">
-                <chart />
-            </div>
+        <chart />
+        <div class="row">
             <div class="col-12">
-                <h4 class="text-center my-3">Jumlah Data Barang</h4>
-                <template v-if="barang.barang && barang.totalItems != 0">
+                <template v-if="barang.barang && barang.totalItems != 0 && barang.length != 0">
+                    <h4 class="text-center my-3">Jumlah Data Barang</h4>
+                    <div class="d-flex justify-content-between">
+                        <Button type="button" label="Unduh Laporan" icon="pi pi-download" iconPos="right" :loading="btnLoading" @click="downloadPdf()"  />
+                    </div>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -33,6 +34,9 @@
                         </table>
                     </div>
                 </template>
+                <template v-else>
+                    <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+                </template>
             </div>
         </div>
     </div>
@@ -45,6 +49,7 @@ export default {
     computed: {
         ...mapGetters({
             barang: 'barang_lab',
+            btnLoading: "btnLoading",
             user: 'auth/user',
         }),
     },
@@ -53,6 +58,9 @@ export default {
     },
     components: { Chart, AdminHeader },
     methods: {
+        downloadPdf(){
+            this.$store.dispatch('downloadPdf')
+        },
         getBarang(){
             this.$store.dispatch('allBarang')
         }
