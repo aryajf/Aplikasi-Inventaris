@@ -1,12 +1,16 @@
 <template>
     <div>
-        <template v-if="productData">
-            <template class="row d-flex justify-content-center" v-if="productData.labels.length != 0">
+        <template v-if="categoriesData">
+            <div class="row d-flex justify-content-around align-items-center" v-if="categoriesData.labels.length != 0">
+                <div class="col-md-4">
+                    <h4 class="text-center my-3">Jumlah Stok Barang</h4>
+                    <Chart type="pie" :data="barangData" />
+                </div>
                 <div class="col-md-5">
                     <h4 class="text-center my-3">Jumlah barang yang berada di kategori</h4>
-                    <Chart type="pie" :data="productData" />
+                    <Chart type="pie" :data="categoriesData" />
                 </div>
-            </template>
+            </div>
             <template v-else>
                 <Message :closable="false" severity="info">Kategori belum ditambahkan</Message>
             </template>
@@ -16,12 +20,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import InputNumber from 'primevue/inputnumber'
-import moment from 'moment'
 import Chart from 'primevue/chart'
 export default {
     created() {
-        this.getProducts()
+        this.getCharts()
     },
     computed: {
         ...mapGetters({
@@ -29,10 +31,10 @@ export default {
         }),
     },
     methods: {
-        getProducts() {
-            this.$store.dispatch("allCategories").then(res => {
+        getCharts() {
+            this.$store.dispatch("chartCategories").then(res => {
                 if(res.status === 200){
-                    this.productData = {
+                    this.categoriesData = {
                         labels: res.data.categoriesName,
                         datasets: [
                             {
@@ -43,14 +45,26 @@ export default {
                     }
                 }
             })
+            this.$store.dispatch("chartBarang").then(res => {
+                if(res.status === 200){
+                    this.barangData = {
+                        labels: res.data.barangName,
+                        datasets: [
+                            {
+                                data: res.data.barangStock,
+                                backgroundColor: res.data.barangColor
+                            },
+                        ]
+                    }
+                }
+            })
         },
     },
-    components: { Chart, InputNumber },
+    components: { Chart },
     data() {
         return {
-            year: parseInt(moment(new Date()).format('YYYY')),
-            paymentData: null,
-            productData: null,
+            barangData: null,
+            categoriesData: null,
         }
     }
 }

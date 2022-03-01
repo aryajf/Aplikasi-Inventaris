@@ -48,19 +48,6 @@ export default({
                 return err.response
             }
         },
-        async search({commit},data){
-            commit('SET_BUTTON_LOADING', true, {root: true})
-            try{
-                let res
-                data.page == null ? res = await axios.get(`barang/search/${data}`) : res = await axios.get(`barang/search/${data.keyword}?page=${data.page}`)
-                commit('SET_BUTTON_LOADING', false, {root: true})
-                commit('SET_ALL_BARANG', res.data)
-                return res.data
-            }catch(err){
-                commit('SET_BUTTON_LOADING', false, {root: true})
-                return err
-            }
-        },
         async storeBarang({commit, dispatch}, credentials){
             commit('SET_BUTTON_LOADING', true, {root: true})
             commit('SET_FORM_ERRORS', [], {root: true})          

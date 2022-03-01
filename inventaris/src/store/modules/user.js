@@ -58,15 +58,15 @@ export default{
             return create
         },
         async searchUsers({commit},data){
-            commit('SET_BUTTON_LOADING', true, {root: true})
+            commit('SET_SEARCH_LOADING', true, {root: true})
             try{
                 let res
                 data.page == null ? res = await axios.get(`user/search/${data.keyword}`) : res = await axios.get(`user/search/${data.keyword}?page=${data.page}`)
-                commit('SET_BUTTON_LOADING', false, {root: true})
+                commit('SET_SEARCH_LOADING', false, {root: true})
                 commit('SET_USERS', res.data)
                 return res.data
             }catch(err){
-                commit('SET_BUTTON_LOADING', false, {root: true})
+                commit('SET_SEARCH_LOADING', false, {root: true})
                 return err
             }
         },

@@ -13,16 +13,10 @@
                     <div class="col-xl-3 col-12 top-form-search">
                         <form action="#">
                             <div class="form-group">
-                                <div class="input-group">
-                                    <input v-model="keyword" type="text" class="form-control" placeholder="Cari disini...">
-                                    <span class="input-group-text">
-                                        <template v-if="!btnLoading">
-                                            <i class="uil uil-search"></i>
-                                        </template>
-                                        <template v-else>
-                                            <Pulse />
-                                        </template>
-                                    </span>
+                                <div class="p-input-icon-right">
+                                    <i class="pi pi-spin pi-spinner" v-if="searchLoading" />
+                                    <i class="pi pi-search" v-else />
+                                    <InputText type="text" placeholder="Cari user disini" v-model="keyword" />
                                 </div>
                             </div>
                         </form>
@@ -134,6 +128,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            searchLoading: 'searchLoading',
             btnLoading: 'btnLoading',
             users: 'user/users'
         }),

@@ -219,15 +219,10 @@ module.exports = {
         let userReq = {
             nama: req.body.nama,
             phone: req.body.phone,
-            alamat: req.body.alamat,
         }
 
         if(userReq.phone == 'null'){
             userReq.phone = ''
-        }
-
-        if(userReq.alamat == 'null'){
-            userReq.alamat = ''
         }
         
         if(userValidation(userReq, req.url) != null){
@@ -302,6 +297,7 @@ function verifyPassword(password, hashPassword){
 
 
 function userValidation(dataRequest, url){
+    console.log(url)
     let rules
     if(url == '/register'){
         rules = {
@@ -331,8 +327,7 @@ function userValidation(dataRequest, url){
     }else if(url == '/profile/update'){
         rules = {
             nama: 'required|min:3',
-            phone: 'required|numeric|min:10',
-            alamat: 'required|min:10',
+            phone: 'required|numeric'
         }
     }
 

@@ -69,9 +69,7 @@ export default({
 
             let data = await axios.put('profile/update', credentials).then(res => {
                 commit('SET_BUTTON_LOADING', false, {root: true})
-                setTimeout(function () {
-                    dispatch('getProfile')
-                }, 1000);
+                dispatch('getProfile')
                 window.notyf.success(res.data.message)
                 return res.data
             }).catch(err => {

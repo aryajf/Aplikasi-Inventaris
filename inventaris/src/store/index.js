@@ -8,6 +8,7 @@ import user from './modules/user'
 
 export default createStore({
   state: {
+    searchLoading: false,
     btnLoading: false,
     formErrors: [],
     barang_lab: [],
@@ -16,6 +17,9 @@ export default createStore({
   mutations: {
     SET_BUTTON_LOADING(state, status){
       state.btnLoading = status
+    },
+    SET_SEARCH_LOADING(state, status){
+      state.searchLoading = status
     },
     SET_BARANG_LAB(state, status){
       state.barang_lab = status
@@ -38,6 +42,30 @@ export default createStore({
 
       return barang
     },
+    async searchAllBarang({commit}, data){
+      commit('SET_SEARCH_LOADING', true, {root: true})
+      try{
+          let res = await axios.get(`all-barang/search/${data.keyword}`) 
+          commit('SET_SEARCH_LOADING', false, {root: true})
+          commit('SET_BARANG_LAB', res.data)
+          return res.data
+      }catch(err){
+          commit('SET_SEARCH_LOADING', false, {root: true})
+          return err
+      }
+    },
+    async searchShowBarang({commit}, data){
+      commit('SET_SEARCH_LOADING', true, {root: true})
+      try{
+          let res = await axios.get(`all-barang/search/${data.keyword}/${data.type}`) 
+          commit('SET_SEARCH_LOADING', false, {root: true})
+          commit('SET_SHOW_BARANG_LAB', res.data)
+          return res.data
+      }catch(err){
+          commit('SET_SEARCH_LOADING', false, {root: true})
+          return err
+      }
+    },
     async showAllBarang({commit}, type){
       let barang = await axios.get(`all-barang/${type}`).then(res => {
         commit('SET_SHOW_BARANG_LAB', res.data)
@@ -48,8 +76,17 @@ export default createStore({
 
       return barang
     },
-    async allCategories(){
-      let categories = await axios.get(`all-categories`).then(res => {
+    async chartCategories(){
+      let categories = await axios.get(`chart-categories`).then(res => {
+        return res
+      }).catch(err => {
+        return err.response
+      })
+
+      return categories
+    },
+    async chartBarang(){
+      let categories = await axios.get(`chart-barang`).then(res => {
         return res
       }).catch(err => {
         return err.response
@@ -89,6 +126,9 @@ export default createStore({
     },
     btnLoading(state){
       return state.btnLoading
+    },
+    searchLoading(state){
+      return state.searchLoading
     },
     formErrors(state){
       return state.formErrors

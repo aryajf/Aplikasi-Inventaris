@@ -176,6 +176,19 @@ const routes = [
       next()
     },
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import(/* webpackChunkName: "Profile" */ '../views/auth/Profile.vue'),
+    beforeEnter: (to, from, next) => {
+      if(!store.getters['auth/authenticated']){
+        return next({
+          name : 'not-found'
+        })
+      }
+      next()
+    },
+  },
 ]
 
 const router = createRouter({

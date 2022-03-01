@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 // CALL CONTROLLER
 const auth = require('../controllers/auth')
 const barang = require('../controllers/barang')
+const table = require('../controllers/table')
 const chart = require('../controllers/chart')
 const category = require('../controllers/category')
 const pdf = require('../controllers/pdf')
@@ -39,9 +40,12 @@ router.get('/', async function(req, res, next) {
 })
 
 // AUTH
-router.get('/all-barang', chart.allBarang)
-router.get('/all-barang/:type', chart.showBarang)
-router.get('/all-categories', chart.allCategories)
+router.get('/all-barang', table.allBarang)
+router.get('/all-barang/search/:keyword', table.searchAllBarang)
+router.get('/all-barang/search/:keyword/:type', table.searchShowBarang)
+router.get('/all-barang/:type', table.showBarang)
+router.get('/chart-barang', chart.barang)
+router.get('/chart-categories', chart.categories)
 router.post('/login', auth.login)
 router.get('/profile', checkAuth, auth.profile)
 router.put('/profile/update', checkAuth, auth.updateProfile)

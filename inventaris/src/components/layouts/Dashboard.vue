@@ -63,9 +63,9 @@
                                 </li>
                                 <p class="nav-heading">AUTH</p>
                                 <li class="nav-item">
-                                    <a :href="homeURL+'/profile'" class="nav-link">
+                                    <router-link to="/profile" class="nav-link">
                                         <i class="uil uil-user-md me-2"></i> Profile
-                                    </a>
+                                    </router-link>
                                 </li>
                                 <li class="nav-item">
                                     <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">
@@ -176,9 +176,9 @@
                                                 </li>
                                                 <p class="nav-heading">AUTH</p>
                                                 <li class="nav-item">
-                                                    <a :href="homeURL+'/profile'" class="nav-link">
+                                                    <router-link to="/profile" class="nav-link">
                                                         <i class="uil uil-user-md me-2"></i> Profile
-                                                    </a>
+                                                    </router-link>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">

@@ -31,11 +31,10 @@
                     <div class="col-xl-3 col-12 top-form-search">
                         <form action="#">
                             <div class="form-group">
-                                <div class="input-group">
-                                    <input v-model="keyword" type="text" class="form-control" placeholder="Cari disini...">
-                                    <span class="input-group-text"><i class="uil uil-search"></i><span v-if="btnLoading" class="ms-1">
-                                            <Pulse />
-                                        </span></span>
+                                <div class="p-input-icon-right">
+                                    <i class="pi pi-spin pi-spinner" v-if="searchLoading" />
+                                    <i class="pi pi-search" v-else />
+                                    <InputText type="text" placeholder="Cari kategori disini" v-model="keyword" />
                                 </div>
                             </div>
                         </form>
@@ -113,6 +112,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            searchLoading: "searchLoading",
             btnLoading: 'btnLoading',
             formErrors: 'formErrors',
             categories: 'category/categories',

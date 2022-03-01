@@ -1,6 +1,13 @@
 <template>
     <div class="bg-white admin-wrapper">
         <LabHeader />
+        <div class="form-group my-3">
+            <div class="p-input-icon-right w-100">
+                <i class="pi pi-spin pi-spinner" v-if="searchLoading" />
+                <i class="pi pi-search" v-else />
+                <InputText type="text" class="w-100" placeholder="Cari barang disini" v-model="keyword" />
+            </div>
+        </div>
         <div class="row d-flex justify-content-around">
             <div class="col-12">
                 <template v-if="barang.barang && barang.totalItems != 0">
@@ -25,9 +32,9 @@
                                     <td class="fw-bold text-center">{{ index+1 }}</td>
                                     <td class="text-center"><router-link :to="'/barang/'+barang.slug">{{barang.title}}</router-link></td>
                                     <td class="text-center">{{barang.category.title}}</td>
-                                    <td>{{barang.tersedia}}</td>
-                                    <td>{{barang.dipakai}}</td>
-                                    <td>{{barang.rusak}}</td>
+                                    <td class="fw-bold text-center">{{barang.tersedia}}</td>
+                                    <td class="fw-bold text-center">{{barang.dipakai}}</td>
+                                    <td class="fw-bold text-center">{{barang.rusak}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -35,7 +42,14 @@
                     <Paginator v-if="barang.totalPages >= 2" @page="changePage($event)" v-model:rows="barang.limitItems" :totalRecords="barang.totalItems" />
                 </template>
                 <template v-else>
-                    <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <div class="col-md-5">
+                            <img class="w-100" src="@/assets/images/puzzle.png" alt="" srcset="">
+                        </div>
+                        <div class="col-md-5">
+                            <h1 class="fw-bold">Barang tidak ditemukan</h1>
+                        </div>
+                    </div>
                 </template>
             </div>
         </div>
@@ -47,12 +61,19 @@ import LabHeader from '@/components/layouts/LabHeader.vue'
 export default {
     data(){
         return{
+            keyword: null,
             url: null,
         };
+    },
+    watch: {
+        keyword() {
+            this.search()
+        },
     },
     computed: {
         ...mapGetters({
             barang: "show_lab",
+            searchLoading: "searchLoading",
             btnLoading: "btnLoading",
             formErrors: "formErrors",
             user: "auth/user",
@@ -73,6 +94,14 @@ export default {
     },
     components: { LabHeader },
     methods: {
+        search() {
+            if (this.keyword != '') {
+                const data = { type: this.url, keyword: this.keyword }
+                this.$store.dispatch('searchShowBarang', data)
+            } else {
+                this.showAllBarang()
+            }
+        },
         downloadPdfShow(){
             this.$store.dispatch('downloadPdfShow', this.url)
         },
