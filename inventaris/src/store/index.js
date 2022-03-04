@@ -101,6 +101,7 @@ export default createStore({
         return window.location.href = res.data.pdf;
       }).catch(err => {
         commit('SET_BUTTON_LOADING', false, {root: true})
+                window.notyf.error(err.response.data.message)
         return err.response
       })
       return pdf
