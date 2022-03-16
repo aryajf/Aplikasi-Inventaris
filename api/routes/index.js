@@ -55,10 +55,8 @@ router.put('/password/update/:email/:token', auth.updatePassword)
 router.post('/password/change', checkAuth, auth.changePassword)
 
 // PDF
-router.route('/pdf')
-  .get(pdf.index)
-router.route('/pdf/:type')
-  .get(pdf.show)
+router.get('/pdf', pdf.index)
+router.get('/pdf/:type', pdf.show)
 
 // BARANG
 router.route('/barang')

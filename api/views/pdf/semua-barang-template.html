@@ -9,21 +9,21 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Nama Barang</th>
-          <th>Kategori</th>
-          <th>Jumlah Lab Dasar</th>
-          <th>Jumlah Lab Menengah</th>
-          <th>Jumlah Lab Lanjut</th>
+          <th class="text-center">Nama Barang</th>
+          <th class="text-center">Kategori</th>
+          <th class="text-center">Jumlah Lab Dasar</th>
+          <th class="text-center">Jumlah Lab Menengah</th>
+          <th class="text-center">Jumlah Lab Lanjut</th>
         </tr>
       </thead>
       <tbody>
         {{#each barang}}
         <tr>
-          <td>{{this.title}}</td>
-          <td>{{this.category}}</td>
-          <td>{{this.dasar}}</td>
-          <td>{{this.menengah}}</td>
-          <td>{{this.lanjut}}</td>
+          <td class="text-center">{{this.title}}</td>
+          <td class="text-center">{{this.category}}</td>
+          <td class="text-center">{{this.dasar}}</td>
+          <td class="text-center">{{this.menengah}}</td>
+          <td class="text-center">{{this.lanjut}}</td>
         </tr>
         {{/each}}
       </tbody>
