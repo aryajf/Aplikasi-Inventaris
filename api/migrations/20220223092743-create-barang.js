@@ -24,6 +24,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      type: {
+        allowNull: false,
+        type: Sequelize.ENUM('Dasar', 'Menengah', 'Lanjut'),
+      },
       category_id: {
         allowNull: false,
         type: Sequelize.INTEGER

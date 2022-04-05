@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     slug: DataTypes.STRING,
     gambar: DataTypes.STRING,
+    type: DataTypes.ENUM('Dasar', 'Menengah', 'Lanjut'),
     category_id: DataTypes.INTEGER
   }, {
     sequelize,

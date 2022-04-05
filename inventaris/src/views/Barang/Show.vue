@@ -3,7 +3,7 @@
         <DeleteModal v-if="barang" :barang_slug="barang.slug"></DeleteModal>
         <div class="container-fluid" v-if="barang">
             <div class="barang-box mb-3 bg-light rounded-top">
-                <div v-if="user.role === 'Asisten'" class="d-flex justify-content-between align-items-center mb-2">
+                <div v-if="user.role != 'Admin'" class="d-flex justify-content-between align-items-center mb-2">
                     <router-link :to="'/barang/edit/'+url">Ubah Barang</router-link>
                     <a href="#" class="text-danger fs-4" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="uil uil-trash-alt"></i></a>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="row">
                         <div class="col-md-4 mb-3" v-for="status of barang.status" :key="status.id">
                             <div><label for="withoutgrouping">Stok {{ status.status }} Lab {{ status.location }}</label></div>
-                            <InputNumber v-if="user.role === 'Asisten'" class="w-100" id="withoutgrouping" v-on:keyup.enter="updateStok(status.id, status.stok)" v-model="status.stok" mode="decimal" :placeholder="'Stok '+status.status+' Lab '+status.location" :useGrouping="false" />
+                            <InputNumber v-if="user.role != 'Admin'" class="w-100" id="withoutgrouping" v-on:keyup.enter="updateStok(status.id, status.stok)" v-model="status.stok" mode="decimal" :placeholder="'Stok '+status.status+' Lab '+status.location" :useGrouping="false" />
                             <div v-else>{{status.stok}}</div>
                         </div>
                 </div>

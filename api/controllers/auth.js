@@ -45,39 +45,21 @@ module.exports = {
                 expiresIn: JWT_SECRET_EXPIRES
             })
 
-            if(user.role == 'Admin'){
-                res.json({
-                    data: {
-                        id: user.id,
-                        email: user.email,
-                        nama: user.nama,
-                        role: user.role
-                    },
-                    message: 'Berhasil login',
-                    request: {
-                        method: req.method,
-                        url: process.env.BASE_URL + req.url
-                    },
-                    status: true,
-                    token: token
-                })
-            }else if(user.role == 'Asisten'){
-                res.json({
-                    data: {
-                        id: user.id,
-                        email: user.email,
-                        nama: user.nama,
-                        role: user.role
-                    },
-                    message: 'Berhasil Login',
-                    request: {
-                        method: req.method,
-                        url: process.env.BASE_URL + req.url
-                    },
-                    status: true,
-                    token: token
-                })
-            }
+            res.json({
+                data: {
+                    id: user.id,
+                    email: user.email,
+                    nama: user.nama,
+                    role: user.role
+                },
+                message: 'Berhasil Login',
+                request: {
+                    method: req.method,
+                    url: process.env.BASE_URL + req.url
+                },
+                status: true,
+                token: token
+            })
         }
     },
     profile: async (req, res) => {

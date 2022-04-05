@@ -74,7 +74,7 @@
                                 </li>
 
                                 <p class="nav-heading">APPS</p>
-                                <li class="nav-item" v-if="user.role === 'Asisten'">
+                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
                                     <router-link to="/category" class="nav-link">
                                         <i class="uil uil-tag-alt me-2"></i> Category
                                     </router-link>
@@ -86,7 +86,7 @@
                                 </li>
 
                                 <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
-                                <p class="nav-heading" v-if="user.role == 'Asisten'">ITEMS</p>
+                                <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
                                 <template v-if="barang.totalItems !== 0">
                                     <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
                                         <router-link :to="'/barang/'+item.slug" class="nav-link">
@@ -94,7 +94,7 @@
                                         </router-link>
                                     </li>
                                 </template>
-                                <li class="nav-item" v-if="user.role === 'Asisten'">
+                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
                                     <router-link to="/barang/create" class="nav-link">
                                         <i class="uil uil-plus me-2"></i> Tambah Item
                                     </router-link>
@@ -187,7 +187,7 @@
                                                 </li>
 
                                                 <p class="nav-heading">APPS</p>
-                                                <li class="nav-item" v-if="user.role === 'Asisten'">
+                                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
                                                     <router-link to="/category" class="nav-link">
                                                         <i class="uil uil-tag-alt me-2"></i> Category
                                                     </router-link>
@@ -199,7 +199,7 @@
                                                 </li>
 
                                                 <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
-                                                <p class="nav-heading" v-if="user.role == 'Asisten'">ITEMS</p>
+                                                <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
                                                 <template v-if="barang.totalItems !== 0">
                                                     <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
                                                         <router-link :to="'/barang/'+item.slug" class="nav-link">
@@ -207,7 +207,7 @@
                                                         </router-link>
                                                     </li>
                                                 </template>
-                                                <li class="nav-item" v-if="user.role === 'Asisten'">
+                                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
                                                     <router-link to="/barang/create" class="nav-link">
                                                         <i class="uil uil-plus me-2"></i> Tambah Item
                                                     </router-link>

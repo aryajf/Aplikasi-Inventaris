@@ -20,7 +20,7 @@ module.exports = {
         let { page } = req.query
         const { limit, offset } = getPagination(page, 10)
 
-        await User.findAndCountAll({limit,offset,order:[['updatedAt', 'DESC']],where:{role: 'Asisten'}}).then(data => {
+        await User.findAndCountAll({limit,offset,order:[['updatedAt', 'DESC']],where:{role: 'Dasar'}}).then(data => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
 
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
@@ -48,6 +48,7 @@ module.exports = {
             nama: req.body.nama,
             password: req.body.password,
             confirmPassword: req.body.confirmPassword,
+            role: req.body.role,
         }
         
         if(userValidation(userReq, req.url) != null) return res.status(400).send(userValidation(userReq, req.url))
@@ -61,7 +62,7 @@ module.exports = {
                     email: userReq.email,
                     nama: userReq.nama,
                     password: hashPassword(userReq.password),
-                    role: 'Asisten'
+                    role: userReq.role
                 })
 
                 res.status(201).json({
@@ -82,7 +83,7 @@ module.exports = {
         }
     },
     showUsers: async(req, res) => {
-        await User.findOne({where:{id:req.params.id,role: 'Asisten'}}).then(user => {
+        await User.findOne({where:{id:req.params.id,role: 'Dasar'}}).then(user => {
             if(user != null){
                 res.json({
                     user : user,
@@ -114,7 +115,7 @@ module.exports = {
             },{
                 phone : {[Op.like]: `%${req.params.keyword}%`},
             }],
-            role: 'Asisten'
+            role: 'Dasar'
         }}).then(data => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
 

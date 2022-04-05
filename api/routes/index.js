@@ -16,7 +16,7 @@ const user = require('../controllers/user')
 // CALL MIDDLEWARE
 const checkAuth = require('../middleware/checkAuth')
 const fileUpload = require('../middleware/fileUpload')
-const isAdmin = require('../middleware/isAdmin')
+const {Admin, Asisten} = require('../middleware/Roles');
 
 router.get('/', async function(req, res, next) {
   let email = 'admin@gmail.com'
@@ -40,66 +40,61 @@ router.get('/', async function(req, res, next) {
 })
 
 // AUTH
-router.get('/all-barang', table.allBarang)
-router.get('/all-barang/search/:keyword', table.searchAllBarang)
-router.get('/all-barang/search/:keyword/:type', table.searchShowBarang)
-router.get('/all-barang/:type', table.showBarang)
-router.get('/chart-barang', chart.barang)
-router.get('/chart-categories', chart.categories)
+router.get('/all-barang', checkAuth, table.allBarang)
+router.get('/all-barang/search/:keyword', checkAuth, table.searchAllBarang)
+router.get('/all-barang/search/:keyword/:type', checkAuth, table.searchShowBarang)
+router.get('/all-barang/:type', checkAuth, table.showBarang)
+router.get('/chart-barang', checkAuth, chart.barang)
+router.get('/chart-categories', checkAuth, chart.categories)
 router.post('/login', auth.login)
 router.get('/profile', checkAuth, auth.profile)
-router.put('/profile/update', checkAuth, auth.updateProfile)
-router.put('/profile/updateAvatar', checkAuth, fileUpload.single('avatar'), auth.updateAvatar)
-router.post('/password/forgot', auth.forgotPasswordRequest)
-router.put('/password/update/:email/:token', auth.updatePassword)
-router.post('/password/change', checkAuth, auth.changePassword)
 
 // PDF
-router.get('/pdf', pdf.index)
-router.get('/pdf/:type', pdf.show)
+router.get('/pdf', checkAuth, pdf.index)
+router.get('/pdf/:type', checkAuth, pdf.show)
 
 // BARANG
 router.route('/barang')
-  .get(barang.index)
+  .get(checkAuth, barang.index)
   .post(checkAuth, fileUpload.single('gambar'), barang.store)
 
 router.route('/barang/search/:keyword')
-  .get(barang.search)
+  .get(checkAuth, barang.search)
 
 router.route('/barang/:slug')
-  .get(barang.show)
+  .get(checkAuth, barang.show)
   .put(checkAuth, fileUpload.single('gambar'), barang.update)
   .delete(checkAuth, barang.delete)
 
 // CATEGORY
 router.route('/category')
-  .get(category.index)
+  .get(checkAuth, category.index)
   .post(checkAuth, category.store)
 
 router.route('/category/search/:keyword')
-  .get(category.search)
+  .get(checkAuth, category.search)
 
 router.route('/category/:id')
-  .get(category.show)
+  .get(checkAuth, category.show)
   .put(checkAuth, category.update)
   .delete(checkAuth, category.delete)
 
 // STATUS
 router.route('/status')
-  .get(status.index)
+  .get(checkAuth, status.index)
 
 router.route('/status/:id')
-  .get(status.show)
+  .get(checkAuth, status.show)
   .put(checkAuth, status.update)
 
 // ADMIN
 router.route('/user')
-  .get(checkAuth, isAdmin, user.getUsers)
-  .post(checkAuth, isAdmin, user.createUser)
+  .get(checkAuth, Admin, user.getUsers)
+  .post(checkAuth, Admin, user.createUser)
 router.route('/user/search/:keyword')
-    .get(checkAuth, isAdmin, user.searchUsers)
+    .get(checkAuth, Admin, user.searchUsers)
 router.route('/user/:id')
-  .get(checkAuth, isAdmin, user.showUsers)
-  .delete(checkAuth, isAdmin, user.deleteUser)
+  .get(checkAuth, Admin, user.showUsers)
+  .delete(checkAuth, Admin, user.deleteUser)
   
 module.exports = router

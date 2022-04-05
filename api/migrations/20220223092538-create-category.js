@@ -12,6 +12,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      type: {
+        allowNull: false,
+        type: Sequelize.ENUM('Dasar', 'Menengah', 'Lanjut'),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

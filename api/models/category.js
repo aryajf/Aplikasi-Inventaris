@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Category.init({
-    title: DataTypes.STRING
+    title: DataTypes.STRING,
+    type: DataTypes.ENUM('Dasar', 'Menengah', 'Lanjut'),
   }, {
     sequelize,
     modelName: 'Category',
