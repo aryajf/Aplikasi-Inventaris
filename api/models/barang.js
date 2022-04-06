@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         as: 'category',
         foreignKey: 'category_id'
       })
-      Barang.hasMany(models.Status, {
-        as: 'status',
-        foreignKey: 'barang_id'
-      })
     }
   };
   Barang.init({
@@ -25,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     slug: DataTypes.STRING,
     gambar: DataTypes.STRING,
+    tersedia: DataTypes.INTEGER,
+    dipakai: DataTypes.INTEGER,
+    rusak: DataTypes.INTEGER,
     type: DataTypes.ENUM('Dasar', 'Menengah', 'Lanjut'),
     category_id: DataTypes.INTEGER
   }, {

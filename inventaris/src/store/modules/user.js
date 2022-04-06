@@ -20,10 +20,17 @@ export default{
         },
     },
     actions: {
-        async getUsers({commit}, page){
+        async getUsers({commit}, data){
             try{
                 let res
-                page == null ? res = await axios.get('user') : res = await axios.get(`user?page=${page}`)
+                if(data){
+                    if(data.page == undefined){
+                        data.page = 0
+                    }
+                    res = await axios.get(`user?&type=${data.type}&page=${data.page}&keyword=${data.keyword}`)
+                }else{
+                    res = await axios.get(`user`)
+                }
                 commit('SET_USERS', res.data)
                 return res
             }catch(err){
@@ -43,7 +50,7 @@ export default{
             commit('SET_FORM_ERRORS', {}, {root: true})
             commit('SET_BUTTON_LOADING', true, {root: true})
             let create = await axios.post('user', credentials).then(res => {
-                commit('SET_BUTTON_LOADING', false, {root: true})
+                commit('SET_BUTTON_LOADING', false, {root: true})        
                 window.notyf.success(res.data.message)
                 dispatch('getUsers')
                 return res
@@ -51,24 +58,11 @@ export default{
                 if(err.response.data.errors){
                     commit('SET_FORM_ERRORS', err.response.data.errors, {root: true})
                 }
-                commit('SET_BUTTON_LOADING', false, {root: true})
                 window.notyf.error(err.response.data.message)
+                commit('SET_BUTTON_LOADING', false, {root: true})
                 return err.response
             })
             return create
-        },
-        async searchUsers({commit},data){
-            commit('SET_SEARCH_LOADING', true, {root: true})
-            try{
-                let res
-                data.page == null ? res = await axios.get(`user/search/${data.keyword}`) : res = await axios.get(`user/search/${data.keyword}?page=${data.page}`)
-                commit('SET_SEARCH_LOADING', false, {root: true})
-                commit('SET_USERS', res.data)
-                return res.data
-            }catch(err){
-                commit('SET_SEARCH_LOADING', false, {root: true})
-                return err
-            }
         },
         async deleteUser({state, commit, dispatch}, id){
             commit('SET_BUTTON_LOADING', true, {root: true})

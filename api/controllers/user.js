@@ -17,10 +17,28 @@ module.exports = {
             }
         })
 
-        let { page } = req.query
+        let { type, page, keyword } = req.query
         const { limit, offset } = getPagination(page, 10)
 
-        await User.findAndCountAll({limit,offset,order:[['updatedAt', 'DESC']],where:{role: 'Dasar'}}).then(data => {
+        const where = {}
+
+        if(type){
+            if(type !== 'All Roles'){
+                where.role = type
+            }
+        }
+
+        if(keyword){
+            where[Op.or] = [{
+                nama : {[Op.like]: `%${keyword}%`},
+            },{
+                email : {[Op.like]: `%${keyword}%`},
+            },{
+                phone : {[Op.like]: `%${keyword}%`},
+            }]
+        }
+
+        await User.findAndCountAll({limit,offset,order:[['updatedAt', 'DESC']],where: where}).then(data => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
 
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
@@ -38,7 +56,7 @@ module.exports = {
                     status: true
                 })
             }else{res.json({totalItems : 0,message : 'User tidak ditemukan', status: false})}
-        }).catch(() => {
+        }).catch((err) => {
             res.status(404).json({message : 'User tidak ditemukan', status: false})
         })
     },
@@ -99,48 +117,13 @@ module.exports = {
             res.status(400).json({message : 'User tidak ditemukan', status: false})
         })
     },
-    searchUsers: async(req, res) => {
-        if(req.params.keyword == ''){
-            res.status(404).json({message : 'User tidak ditemukan', status: false})
-        }
-        
-        let { page } = req.query
-        const { limit, offset } = getPagination(page, 10)
-
-        await User.findAndCountAll({limit,offset,where:{
-            [Op.or]: [{
-                nama : {[Op.like]: `%${req.params.keyword}%`},
-            },{
-                email : {[Op.like]: `%${req.params.keyword}%`},
-            },{
-                phone : {[Op.like]: `%${req.params.keyword}%`},
-            }],
-            role: 'Dasar'
-        }}).then(data => {
-            const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
-
-            if(dataPaginate.length != 0 && !isNaN(currentPage)){
-                res.json({
-                    totalItems : totalItems,
-                    limitItems : limit,
-                    totalPages : totalPages,
-                    currentPage : currentPage,
-                    users : dataPaginate,
-                    message: 'User berhasil ditampilkan',
-                    request: {
-                        method: req.method,
-                        url: BASE_URL + 'user/search/' + req.params.keyword
-                    },
-                    status: true
-                })
-            }else{res.json({totalItems : 0, message : 'User tidak ditemukan', status: false})}
-        }).catch(() => {
-            res.json({totalItems : 0, message : 'User tidak ditemukan', status: false})
-        })
-    },
     deleteUser: async(req, res) => {
         const user = await findUser(req.params.id)
         if(user != null){
+            if(req.decoded.id === user.id){
+                res.status(400).json({message : 'Tidak ada akses untuk menghapus akunmu', status: false})
+            }
+            
             deleteFile(avatarPath + user.avatar)
             try{
                 user.destroy()
@@ -188,7 +171,8 @@ function userValidation(dataRequest, url){
             nama: 'required|min:3',
             email: 'required|email|min:5',
             password: 'required|min:5',
-            confirmPassword: 'required|min:5|same:password'
+            confirmPassword: 'required|min:5|same:password',
+            role: 'required'
         }
     }
 

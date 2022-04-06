@@ -80,7 +80,7 @@
                                 <Editor :class="{'p-invalid': formErrors.description && formErrors.description.length > 0}" v-model="form.description" editorStyle="height: 200px" />
                             </div>
 
-                            <button type="submit" class="btn bg-wa btn-sm d-flex" :disabled="btnLoading">
+                            <button type="submit" class="mt-3 btn bg-purple btn-sm d-flex" :disabled="btnLoading">
                                 Simpan
                                 <template v-if="btnLoading">
                                     <Pulse />

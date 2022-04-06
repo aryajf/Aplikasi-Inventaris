@@ -34,7 +34,7 @@
                                             </div>
                                         </button>
                                     </label>
-                                    <input type="file" class="d-none" id="avatar" v-on:change="onImageChange">
+                                    <input :disabled="btnLoading" type="file" class="d-none" id="avatar" v-on:change="onImageChange">
                                 </div>
                             </div>
                             <div id="cropper-canvas" class="col d-none">

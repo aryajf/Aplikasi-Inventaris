@@ -95,6 +95,27 @@ export default({
                 return err.response
             }
         },
+        async updateStok({commit, dispatch}, [slug, credentials]){
+            commit('SET_BUTTON_LOADING', true, {root: true})
+            commit('SET_FORM_ERRORS', [], {root: true})
+            try{
+                await axios.put(`barang/stok/${slug}`, credentials).then(response =>{
+                    dispatch('getBarang')
+                    window.notyf.success(response.data.message)
+                    commit('SET_BUTTON_LOADING', false, {root: true})
+                    return response
+                })
+            }catch(err){
+                if(err.response){
+                    if(err.response.data.errors){
+                        commit('SET_FORM_ERRORS', err.response.data.errors, {root: true})
+                    }
+                    commit('SET_BUTTON_LOADING', false, {root: true})
+                    window.notyf.error(err.response.data.message)
+                }
+                return err.response
+            }
+        },
         async deleteBarang({state,commit, dispatch}, slug){
             commit('SET_BUTTON_LOADING', true, {root: true})
             try{

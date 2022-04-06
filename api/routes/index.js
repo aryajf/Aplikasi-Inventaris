@@ -10,7 +10,6 @@ const table = require('../controllers/table')
 const chart = require('../controllers/chart')
 const category = require('../controllers/category')
 const pdf = require('../controllers/pdf')
-const status = require('../controllers/status')
 const user = require('../controllers/user')
 
 // CALL MIDDLEWARE
@@ -41,13 +40,16 @@ router.get('/', async function(req, res, next) {
 
 // AUTH
 router.get('/all-barang', checkAuth, table.allBarang)
-router.get('/all-barang/search/:keyword', checkAuth, table.searchAllBarang)
-router.get('/all-barang/search/:keyword/:type', checkAuth, table.searchShowBarang)
-router.get('/all-barang/:type', checkAuth, table.showBarang)
+// router.get('/all-barang/search/:keyword', checkAuth, Admin, table.searchAllBarang)
+// router.get('/all-barang/search/:keyword/:type', checkAuth, table.searchShowBarang)
+// router.get('/all-barang/:type', checkAuth, table.showBarang)
 router.get('/chart-barang', checkAuth, chart.barang)
 router.get('/chart-categories', checkAuth, chart.categories)
 router.post('/login', auth.login)
 router.get('/profile', checkAuth, auth.profile)
+router.put('/profile/update', checkAuth, auth.updateProfile)
+router.put('/profile/updateAvatar', checkAuth, fileUpload.single('avatar'), auth.updateAvatar)
+router.post('/password/change', checkAuth, auth.changePassword)
 
 // PDF
 router.get('/pdf', checkAuth, pdf.index)
@@ -55,44 +57,37 @@ router.get('/pdf/:type', checkAuth, pdf.show)
 
 // BARANG
 router.route('/barang')
-  .get(checkAuth, barang.index)
-  .post(checkAuth, fileUpload.single('gambar'), barang.store)
+  .get(checkAuth, Asisten, barang.index)
+  .post(checkAuth, Asisten, fileUpload.single('gambar'), barang.store)
+  
+router.route('/barang/stok/:slug')
+  .put(checkAuth, Asisten, barang.updateStok)
 
 router.route('/barang/search/:keyword')
-  .get(checkAuth, barang.search)
+  .get(checkAuth, Asisten, barang.search)
 
 router.route('/barang/:slug')
-  .get(checkAuth, barang.show)
-  .put(checkAuth, fileUpload.single('gambar'), barang.update)
-  .delete(checkAuth, barang.delete)
+  .get(checkAuth, Asisten, barang.show)
+  .put(checkAuth, Asisten, fileUpload.single('gambar'), barang.update)
+  .delete(checkAuth, Asisten, barang.delete)
 
 // CATEGORY
 router.route('/category')
-  .get(checkAuth, category.index)
-  .post(checkAuth, category.store)
+  .get(checkAuth, Asisten, category.index)
+  .post(checkAuth, Asisten, category.store)
 
 router.route('/category/search/:keyword')
-  .get(checkAuth, category.search)
+  .get(checkAuth, Asisten, category.search)
 
 router.route('/category/:id')
-  .get(checkAuth, category.show)
-  .put(checkAuth, category.update)
-  .delete(checkAuth, category.delete)
-
-// STATUS
-router.route('/status')
-  .get(checkAuth, status.index)
-
-router.route('/status/:id')
-  .get(checkAuth, status.show)
-  .put(checkAuth, status.update)
+  .get(checkAuth, Asisten, category.show)
+  .put(checkAuth, Asisten, category.update)
+  .delete(checkAuth, Asisten, category.delete)
 
 // ADMIN
 router.route('/user')
   .get(checkAuth, Admin, user.getUsers)
   .post(checkAuth, Admin, user.createUser)
-router.route('/user/search/:keyword')
-    .get(checkAuth, Admin, user.searchUsers)
 router.route('/user/:id')
   .get(checkAuth, Admin, user.showUsers)
   .delete(checkAuth, Admin, user.deleteUser)

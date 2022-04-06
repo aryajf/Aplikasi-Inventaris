@@ -18,7 +18,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn bg-wa btn-sm d-flex mt-2" :disabled="btnLoading">
+                            <button type="submit" class="btn bg-purple btn-sm d-flex mt-2" :disabled="btnLoading">
                                 Ubah Kategori
                                 <template v-if="btnLoading">
                                     <Pulse />

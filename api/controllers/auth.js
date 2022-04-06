@@ -35,7 +35,7 @@ module.exports = {
             const expiresToken = parseInt(JWT_SECRET_EXPIRES)
 
             const expired = new Date(user.token_expired_at) - new Date()
-            if (expired <= 0) {
+            if(expired <= 0) {
                 user.update({token_expired_at: null})
             }
 
@@ -81,90 +81,6 @@ module.exports = {
             },
             status: true,
         })
-    },
-    forgotPasswordRequest: async(req, res) => {
-        try{
-            let user = await findUser(req.body.email)
-            if(user){
-                const token = crypto.randomBytes(20).toString('hex')
-                user.token = token
-                await user.save()
-
-                let transporter = nodemailer.createTransport(emailConfig)
-                await transporter.sendMail({
-                    from: MAIL_FROM_ADDRESS,
-                    to: req.body.email,
-                    subject: "Lupa Password - Labamen",
-                    html: `
-                    <div>
-                        <h1 style="color:#fff;text-align:center;background-color:#333;">Verifikasi Email anda</h1>
-                        <div style="padding: auto 10px;">
-                            <h3>Link akan kadaluarsa dalam 1 jam | Harap jangan bagikan link ini kepada orang lain yaa :)</h3>
-                            <a href='${HOME_URL}/password/update/${req.body.email}/${token}' target='_blank'>klik link disini gc</a>
-                        </div>
-                    </div>
-                    `,
-                })
-
-                if(user.token){
-                    setTimeout(async function(){
-                        user.token = null
-                        await user.save()
-                    }, 3600000)
-                }
-    
-                res.status(201).json({
-                    message: 'Silahkan cek email anda untuk mengubah password',
-                    request: {
-                        method: req.method,
-                        url: process.env.BASE_URL + req.url
-                    },
-                    status: true,
-                })
-            }else{
-                res.status(404).json({email: req.body.email, message: 'Email tidak ditemukan', status: false})
-            }
-        }catch(err){
-            res.status(400).json({
-                error: err.message,
-                message: 'Ups, terjadi kesalahan',
-                status: false
-            })
-        }
-    },
-    updatePassword: async (req, res) => {
-        let user = await findUser(req.params.email)
-        if(user.token != req.params.token || user.token == null){
-            res.status(404).json({
-                message: 'Link tidak valid',
-                request: {
-                    method: req.method,
-                    url: process.env.BASE_URL + req.url
-                },
-                status: false,
-            })
-        }else{
-            try{
-                user.password = hashPassword(req.body.password),
-                user.token = null
-                await user.save()
-
-                res.status(201).json({
-                    message: 'Password berhasil diganti',
-                    request: {
-                        method: req.method,
-                        url: process.env.BASE_URL + req.url
-                    },
-                    status: true,
-                })
-            }catch(err){
-                res.status(400).json({
-                    error: err.message,
-                    message: 'Ups, terjadi kesalahan',
-                    status: false
-                })
-            }
-        }
     },
     changePassword: async (req, res) => {
         let user = await findUser(req.decoded.email)
@@ -279,7 +195,6 @@ function verifyPassword(password, hashPassword){
 
 
 function userValidation(dataRequest, url){
-    console.log(url)
     let rules
     if(url == '/register'){
         rules = {

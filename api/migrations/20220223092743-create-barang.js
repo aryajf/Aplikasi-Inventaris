@@ -24,6 +24,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      tersedia: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
+      dipakai: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
+      rusak: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
       type: {
         allowNull: false,
         type: Sequelize.ENUM('Dasar', 'Menengah', 'Lanjut'),

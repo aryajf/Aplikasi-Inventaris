@@ -4,7 +4,7 @@ import store from '@/store'
 const routes = [
   {
     path: '/:pathMatch(.*)*',
-    name: 'not-found',
+    name: 'Not Found',
     component: () => import(/* webpackChunkName: "404" */ '@/components/errors/404.vue'),
     beforeEnter: () => {
       window.scrollTo(0, 0)
@@ -50,19 +50,19 @@ const routes = [
     path: '/category/edit/:id',
     name: 'Update Category',
     component: () => import(/* webpackChunkName: "category" */ '../views/Category/Update.vue'),
-    beforeEnter: (to, from, next) => Admin(next)
+    beforeEnter: (to, from, next) => Asisten(next)
   },
   {
     path: '/barang/create',
     name: 'Create Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Create.vue'),
-    beforeEnter: (to, from, next) => Admin(next)
+    beforeEnter: (to, from, next) => Asisten(next)
   },
   {
     path: '/barang/edit/:slug',
     name: 'Update Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Update.vue'),
-    beforeEnter: (to, from, next) => Admin(next)
+    beforeEnter: (to, from, next) => Asisten(next)
   },
   {
     path: '/barang/:slug',
@@ -74,25 +74,19 @@ const routes = [
     path: '/user',
     name: 'List User',
     component: () => import(/* webpackChunkName: "user" */ '../views/User/User.vue'),
-    beforeEnter: (to, from, next) => Asisten(next)
+    beforeEnter: (to, from, next) => Admin(next)
   },
   {
     path: '/user/create',
     name: 'Create User',
     component: () => import(/* webpackChunkName: "user" */ '../views/User/Create.vue'),
-    beforeEnter: (to, from, next) => Asisten(next)
-  },
-  {
-    path: '/user/update',
-    name: 'Update User',
-    component: () => import(/* webpackChunkName: "user" */ '../views/User/Update.vue'),
-    beforeEnter: (to, from, next) => Asisten(next)
+    beforeEnter: (to, from, next) => Admin(next)
   },
   {
     path: '/user/:id',
     name: 'Show User',
     component: () => import(/* webpackChunkName: "user" */ '../views/User/Show.vue'),
-    beforeEnter: (to, from, next) => Asisten(next)
+    beforeEnter: (to, from, next) => Admin(next)
   },
 ]
 

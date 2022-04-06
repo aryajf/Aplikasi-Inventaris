@@ -26,21 +26,22 @@
                                 <h5>{{user.role}}</h5>
                             </div>
                         </div>
-                        <!-- <p class="mt-1" v-html="barang.description"></p> -->
                     </div>
                 </div>
                 <form @submit.prevent="updateProfile">
                     <div class="row d-flex justify-content-center my-5">
                         <div class="col-md-3 mb-3">
+                            <label for="">Nama <span class="text-danger text-sm" v-if="formErrors.nama">*{{formErrors.nama[0]}}</span></label>
                             <span class="p-input-icon-left w-100">
                                 <i class="pi pi-user" />
-                                <InputText class=" w-100" type="text" v-model="user.nama" placeholder="Nama User" />
+                                <InputText class=" w-100" type="text" v-model="user.nama" placeholder="Nama User" :class="{'p-invalid': formErrors.nama && formErrors.nama.length > 0}" />
                             </span>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <InputNumber class=" w-100" v-model="user.phone" mode="decimal" placeholder="Nomor Telepon" :useGrouping="false" />
+                            <label for="">Nomor Telepon <span class="text-danger text-sm" v-if="formErrors.phone">*{{formErrors.phone[0]}}</span></label>
+                            <InputNumber class=" w-100" v-model="user.phone" mode="decimal" placeholder="Nomor Telepon" :useGrouping="false" :class="{'p-invalid': formErrors.phone && formErrors.phone.length > 0}" />
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-3 mb-3 d-flex align-items-end">
                             <Button type="submit" class=" w-100" label="Ubah Profil" icon="pi pi-check" iconPos="right" :loading="btnLoading" />
                         </div>
                     </div>

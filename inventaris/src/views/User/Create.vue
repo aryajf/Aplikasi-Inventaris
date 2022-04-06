@@ -4,10 +4,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createUserModalLabel">Buat User Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="modalClose"></button>
                 </div>
                 <div class="modal-body">
                     <form @submit.prevent="submit">
+                        <div class="form-group">
+                            <label for="">Tipe Asisten <span class="text-danger text-sm" v-if="formErrors.role">*{{formErrors.role[0]}}</span></label>
+                            <div class="input-group mb-3">
+                                <Dropdown :filter="true" v-model="form.role" :options="roles" optionLabel="name" placeholder="Pilih Asisten" class="w-100" :class="{'p-invalid': formErrors.role && formErrors.role.length > 0}" />
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="">Nama Lengkap <span class="text-danger text-sm" v-if="formErrors.nama">*{{formErrors.nama[0]}}</span></label>
                             <div class="input-group mb-3">
@@ -39,7 +45,7 @@
 
                         <div class="float-start">
                             <button type="button" class="btn btn-outline-secondary btn-sm float-start me-2" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn bg-wa btn-sm float-start d-flex" :disabled="btnLoading">Submit
+                            <button type="submit" class="btn bg-purple btn-sm float-start d-flex" :disabled="btnLoading">Submit
                                 <span v-if="btnLoading" class="ms-1">
                                     <Pulse />
                                 </span>
@@ -59,11 +65,17 @@ export default {
     data() {
         return {
             form: {
+                role: {name: ''},
                 nama: '',
                 email: '',
                 password: '',
                 confirmPassword: '',
             },
+            roles: [
+                {name: 'Dasar'},
+                {name: 'Menengah'},
+                {name: 'Lanjut'}
+            ]
         }
     },
     components: { Pulse },
@@ -71,20 +83,30 @@ export default {
         ...mapGetters({
             btnLoading: 'btnLoading',
             formErrors: 'formErrors',
+            authenticated: "auth/authenticated",
         }),
     },
     methods: {
         submit() {
+            this.form.role = this.form.role.name
             this.$store.dispatch('user/createUser', this.form).then((res) => {
                 if (res.status === 201) {
+                    this.form.role = {name: ''}
                     this.form.nama = ''
                     this.form.email = ''
                     this.form.password = ''
                     this.form.confirmPassword = ''
-                    this.$store.dispatch('user/getUsers')
+                    this.$refs.modalClose.click()
                 }
+            }).catch(() => {
+                
             })
         },
     },
 }
 </script>
+<style>
+.p-dropdown-panel{
+    z-index: 1056 !important;
+}
+</style>

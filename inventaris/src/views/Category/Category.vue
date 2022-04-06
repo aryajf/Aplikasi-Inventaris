@@ -4,7 +4,15 @@
         <div class="bg-white admin-wrapper">
             <AdminHeader />
             <div class="admin-body">
-                <div class="row">
+                <div class="admin-panel-responsive">
+                    <div class="admin-panel">
+                        <router-link to="/category" class="btn btn-sm"><i class="uil uil-file-bookmark-alt me-1"></i>
+                            Semua Item <span class="badge bg-purple ms-1">{{categories.totalItems}}</span>
+                        </router-link>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <div class="col-xl-9 col-12 top-button">
                         <form action="#" @submit.prevent="submit">
                             <div class="row">
@@ -17,18 +25,20 @@
                                             </label>
                                             <input type="text" class="form-control" :class="{'is-invalid': formErrors.title && formErrors.title.length > 0}" placeholder="Masukkan nama kategori" v-model="form.title">
                                         </div>
+                                        <div class="form-group col-md-6 d-flex align-items-end">
+                                            <button type="submit" class="btn bg-purple btn-sm d-flex mt-1" :disabled="btnLoading">
+                                                <i class="uil uil-plus"></i> Tambah Kategori
+                                                <template v-if="btnLoading">
+                                                    <Pulse />
+                                                </template>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        <button type="submit" class="btn bg-wa btn-sm d-flex mt-1" :disabled="btnLoading">
-                            <i class="uil uil-plus"></i> Tambah Kategori
-                            <template v-if="btnLoading">
-                                <Pulse />
-                            </template>
-                        </button>
                         </form>
                     </div>
-                    <div class="col-xl-3 col-12 top-form-search">
+                    <div class="col-xl-3 col-12 mt-3 top-form-search d-flex align-items-end">
                         <form action="#">
                             <div class="form-group">
                                 <div class="p-input-icon-right">
@@ -38,14 +48,6 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <div class="admin-panel-responsive">
-                    <div class="admin-panel">
-                        <router-link to="/category" class="btn btn-sm"><i class="uil uil-file-bookmark-alt me-1"></i>
-                            Semua Item <span class="badge bg-wa ms-1">{{categories.totalItems}}</span>
-                        </router-link>
                     </div>
                 </div>
 

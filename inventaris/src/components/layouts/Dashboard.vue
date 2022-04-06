@@ -13,22 +13,16 @@
                         </div>
                         <div class="user mb-2">
                             <div class="row">
-                                <!-- <template v-if="user.length != 0">
-                                    <div class="col-md-3">
-                                        <div v-if="user.data.avatar">
-                                            <img loading="lazy" :src="`${apiURL}images/avatar/${user.data.avatar}`" :alt="user.data.avatar" class="w-100 rounded-circle">
-                                        </div>
-                                        <div v-else>
-                                            <img loading="lazy" src="@/assets/images/no-avatar.png" :alt="user.data.nama" class="w-100 rounded-circle">
-                                        </div>
+                                <div class="col-md-3">
+                                    <img v-if="user.avatar" :src="apiURL+'images/avatars/'+user.avatar" :alt="authenticated.nama" class="w-100 rounded-circle">
+                                    <img v-else src="@/assets/images/user.png" :alt="authenticated.nama" class="w-100 rounded-circle">
+                                </div>
+                                <div class="col-md-9 p-0 d-flex align-items-center">
+                                    <div>
+                                        <p class="p-0 m-0">{{ authenticated.nama }}</p>
+                                        <span class="badge bg-white text-dark"><span v-if="authenticated.role != 'Admin'">Asisten Lab </span>{{ authenticated.role }}</span>
                                     </div>
-                                    <div class="col-md-9 p-0 d-flex align-items-center">
-                                        <div>
-                                            <p class="p-0 m-0">{{ user.data.nama }}</p>
-                                            <span class="badge bg-by text-dark">{{ user.data.role }}</span>
-                                        </div>
-                                    </div>
-                                </template> -->
+                                </div>
                             </div>
                         </div>
 
@@ -39,6 +33,16 @@
                                     <router-link to="/" class="nav-link">
                                         <i class="uil uil-estate me-2"></i> Home
                                     </router-link>
+                                </li>
+                                <li class="nav-item">
+                                    <router-link to="/profile" class="nav-link">
+                                        <i class="uil uil-user-md me-2"></i> Profile
+                                    </router-link>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">
+                                        <i class="uil uil-sign-out-alt me-2"></i> Logout
+                                    </a>
                                 </li>
                                 <p class="nav-heading">LAB MENU</p>
                                 <li class="nav-item">
@@ -61,17 +65,6 @@
                                         <i class="uil uil-edit-alt me-2"></i> Lab Lanjut
                                     </router-link>
                                 </li>
-                                <p class="nav-heading">AUTH</p>
-                                <li class="nav-item">
-                                    <router-link to="/profile" class="nav-link">
-                                        <i class="uil uil-user-md me-2"></i> Profile
-                                    </router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">
-                                        <i class="uil uil-sign-out-alt me-2"></i> Logout
-                                    </a>
-                                </li>
 
                                 <p class="nav-heading">APPS</p>
                                 <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
@@ -85,9 +78,9 @@
                                     </router-link>
                                 </li>
 
-                                <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
+                                <p class="nav-heading" v-if="barang.length !== 0 && user.role == 'Admin'">ITEMS</p>
                                 <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
-                                <template v-if="barang.totalItems !== 0">
+                                <template v-if="barang.length !== 0">
                                     <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
                                         <router-link :to="'/barang/'+item.slug" class="nav-link">
                                             <i class="uil uil-box me-2"></i> {{ item.title }}
@@ -153,6 +146,16 @@
                                                         <i class="uil uil-estate me-2"></i> Home
                                                     </router-link>
                                                 </li>
+                                                <li class="nav-item">
+                                                    <router-link to="/profile" class="nav-link">
+                                                        <i class="uil uil-user-md me-2"></i> Profile
+                                                    </router-link>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">
+                                                        <i class="uil uil-sign-out-alt me-2"></i> Logout
+                                                    </a>
+                                                </li>
                                                 <p class="nav-heading">LAB MENU</p>
                                                 <li class="nav-item">
                                                     <router-link to="/lab" class="nav-link">
@@ -174,18 +177,6 @@
                                                         <i class="uil uil-edit-alt me-2"></i> Lab Lanjut
                                                     </router-link>
                                                 </li>
-                                                <p class="nav-heading">AUTH</p>
-                                                <li class="nav-item">
-                                                    <router-link to="/profile" class="nav-link">
-                                                        <i class="uil uil-user-md me-2"></i> Profile
-                                                    </router-link>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signoutModal">
-                                                        <i class="uil uil-sign-out-alt me-2"></i> Logout
-                                                    </a>
-                                                </li>
-
                                                 <p class="nav-heading">APPS</p>
                                                 <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
                                                     <router-link to="/category" class="nav-link">
@@ -283,6 +274,7 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user',
+            authenticated: 'auth/authenticated',
             barang: 'barang/all_barang'
         }),
     },

@@ -11,7 +11,7 @@ module.exports = {
         let { page } = req.query
         const { limit, offset } = getPagination(page, 12)
 
-        await getCategory(limit, offset).then(async (data) => {
+        await getCategory(req.decoded.role, limit, offset).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
@@ -41,7 +41,7 @@ module.exports = {
         let { page } = req.query
         const { limit, offset } = getPagination(page, 12)
         
-        await getCategory(limit, offset, req.params.keyword).then(async(data) => {
+        await getCategory(req.decoded.role, limit, offset, req.params.keyword).then(async(data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
 
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
@@ -65,7 +65,7 @@ module.exports = {
     },
     show: async(req, res) => {
         try{
-            const category = await findCategory(req.params.id)
+            const category = await findCategory(req.params.id, req.decoded.role)
             res.json({
                 category : category,
                 message: 'Item berhasil ditampilkan',
@@ -82,6 +82,7 @@ module.exports = {
     store: async(req, res) => {
         let categoryReq = {
             title: req.body.title,
+            type: req.decoded.role
         }
 
         if(categoryValidation(categoryReq) != null){
@@ -107,7 +108,7 @@ module.exports = {
         }
     },
     update: async(req, res) => {
-        let category = await findCategory(req.params.id)
+        let category = await findCategory(req.params.id, req.decoded.role)
         if(category == null){
             res.status(404).json({message : 'Item tidak ditemukan', status: false})
             return 
@@ -144,7 +145,7 @@ module.exports = {
         }
     },
     delete: async(req, res) => {
-        let category = await findCategory(req.params.id)
+        let category = await findCategory(req.params.id, req.decoded.role)
         if(category != null){
             try{
                 category.destroy()
@@ -174,23 +175,26 @@ module.exports = {
     
 }
 
-function findCategory(id){
-    return Category.findOne({where: {id: id}})
+function findCategory(id, role){
+    return Category.findOne({where: {id: id, type: role}})
 }
 
-async function getCategory(limit, offset, keyword){
+async function getCategory(role, limit, offset, keyword){
     let statement
 
     if(keyword){
         statement = {
             where: {
-                title:{}
+                title:{},
+                type: role
             },
             limit,offset,order:[['updatedAt', 'DESC']]
         }
     }else{
         statement = {
-            where: {},
+            where: {
+                type: role
+            },
             limit,offset,order:[['updatedAt', 'DESC']]
         }
     }

@@ -74,10 +74,10 @@
                                 <div class="form-group col-md-6">
                                     <label for="">
                                         Kategori
-                                        <span class="text-danger text-sm" v-if="formErrors.category">*{{formErrors.category[0]}}</span>
+                                        <span class="text-danger text-sm" v-if="formErrors.category_id">*{{formErrors.category_id[0]}}</span>
                                     </label>
                                     <div>
-                                        <Dropdown class="w-100" v-model="form.category" :options="categories" :filter="true" optionLabel="name" placeholder="Pilih Kategori" :class="{'p-invalid': formErrors.category && formErrors.category.length > 0}" />
+                                        <Dropdown class="w-100" v-model="form.category" :options="categories" :filter="true" optionLabel="name" placeholder="Pilih Kategori" :class="{'p-invalid': formErrors.category_id && formErrors.category_id.length > 0}" />
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 <Editor :class="{'p-invalid': formErrors.description && formErrors.description.length > 0}" v-model="form.description" editorStyle="height: 200px" />
                             </div>
 
-                            <button type="submit" class="btn bg-wa btn-sm d-flex" :disabled="btnLoading">
+                            <button type="submit" class="mt-3 btn bg-purple btn-sm d-flex" :disabled="btnLoading">
                                 Submit
                                 <template v-if="btnLoading">
                                     <Pulse />

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
+import appConfig from '@/config/app'
 
 export default({
     namespaced: true,
@@ -69,10 +70,11 @@ export default({
 
             let data = await axios.put('profile/update', credentials).then(res => {
                 commit('SET_BUTTON_LOADING', false, {root: true})
-                dispatch('getProfile')
                 window.notyf.success(res.data.message)
+                dispatch('getProfile')
                 return res.data
             }).catch(err => {
+                console.log(err.response.data)
                 if(err.response.data.errors){
                     commit('SET_FORM_ERRORS', err.response.data.errors, {root: true})
                 }
@@ -102,22 +104,25 @@ export default({
         async changePassword({commit},credentials){
             commit('SET_FORM_ERRORS', {}, {root: true})
             commit('SET_BUTTON_LOADING', true, {root: true})
-            await axios.post('password/change', credentials).then(res => {
+            let data = await axios.post('password/change', credentials).then(res => {
                 commit('SET_BUTTON_LOADING', false, {root: true})
                 window.notyf.success(res.data.message)
+                return res
             }).catch(err => {
                 if(err.response.data.errors){
                     commit('SET_FORM_ERRORS', err.response.data.errors, {root: true})
                 }
                 commit('SET_BUTTON_LOADING', false, {root: true})
                 window.notyf.error(err.response.data.message)
+                return err.response
             })
+            return data
         },
         async logout({commit}){
             commit('SET_TOKEN', null)
             commit('SET_USER', [])
             window.notyf.success("Berhasil Logout")
-            router.push('/login')
+            window.location.href = appConfig.homeURL
         }
     }
 })

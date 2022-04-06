@@ -85,6 +85,7 @@ module.exports = {
         })
     },
     show: async(req, res) => {
+        console.log(req.params.slug)
         try{
             const barang = await findBarang(req.params.slug)
             res.json({
@@ -110,8 +111,11 @@ module.exports = {
             slug: slug,
             gambar: '',
             category_id: req.body.category_id,
+            type: req.decoded.role,
+            tersedia: 0,
+            dipakai: 0,
+            rusak: 0,
         }
-
         
         !req.file ? barangReq.gambar = null : barangReq.gambar = req.file.filename
         if(barangValidation(barangReq) != null){
@@ -129,22 +133,6 @@ module.exports = {
             }
             let barang = await Barang.create(barangReq)
             
-            
-            // Untuk tipe Dasar
-            await Status.create({location: 'Dasar',status: 'Tersedia',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Dasar',status: 'Dipakai',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Dasar',status: 'Rusak',stok: 0,barang_id: barang.id})
-
-            // Untuk tipe Menengah
-            await Status.create({location: 'Menengah',status: 'Tersedia',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Menengah',status: 'Dipakai',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Menengah',status: 'Rusak',stok: 0,barang_id: barang.id})
-
-            // Untuk tipe Lanjut
-            await Status.create({location: 'Lanjut',status: 'Tersedia',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Lanjut',status: 'Dipakai',stok: 0,barang_id: barang.id})
-            await Status.create({location: 'Lanjut',status: 'Rusak',stok: 0,barang_id: barang.id})
-            
             // 1. Make directory 2. Compress image
             makeDirectory(barangGambarPath)
             compressImage('public/uploads/'+req.file.filename, barangGambarPath, req.file.path)
@@ -161,7 +149,6 @@ module.exports = {
                 status: true,
             })
         }catch(err){
-            console.log(err)
             deleteFile(req.file.path)
             res.status(400).json({
                 error: err.message,
@@ -185,6 +172,9 @@ module.exports = {
             description: req.body.description,
             gambar: '',
             category_id: req.body.category_id ? req.body.category_id : categoryId,
+            tersedia: req.body.tersedia,
+            dipakai: req.body.dipakai,
+            rusak: req.body.rusak,
         }
         
         if(!req.file){
@@ -215,6 +205,42 @@ module.exports = {
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'barang/' + req.params.slug
+                },
+                status: true,
+            })
+        }catch(err){
+            res.status(400).json({
+                error: err.message,
+                message: 'Terjadi kesalahan saat mengubah item',
+                status: false
+            })
+        }
+    },
+    updateStok: async(req, res) => {
+        let barang = await findBarang(req.params.slug)
+        if(barang == null){
+            res.status(404).json({message : 'Item tidak ditemukan', status: false})
+            deleteFile(req.file.path)
+            return 
+        }
+
+        let barangReq = {
+            tersedia: req.body.tersedia,
+            dipakai: req.body.dipakai,
+            rusak: req.body.rusak,
+        }
+
+        try{
+            barang.update(barangReq)
+            res.status(201).json({
+                data: {
+                    slug: barang.slug,
+                    title: barang.title,
+                },
+                message: 'Item berhasil diubah',
+                request: {
+                    method: req.method,
+                    url: process.env.BASE_URL + 'barang/stok/' + req.params.slug
                 },
                 status: true,
             })
@@ -257,9 +283,6 @@ module.exports = {
 
 function findBarang(slug){
     return Barang.findOne({where: {slug: slug}, include: [{
-        model : Status,
-        as: 'status'
-    },{
         model : Category,
         as: 'category'
     }]})
