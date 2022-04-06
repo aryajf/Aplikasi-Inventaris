@@ -14,12 +14,19 @@ module.exports = {
         }]
         
         if(type){
-            where.type = type
+            type = type[0].toUpperCase() + type.slice(1)
+            if(req.decoded.role === 'admin'){
+                where.type = type
+            }
+            where.type = req.decoded.role
+        }else{
+            if(req.decoded.role !== 'admin'){
+                where.type = req.decoded.role
+            }
         }
 
-        if(type){
-            type = type[0].toUpperCase() + type.slice(1)
-            where.type = {
+        if(keyword){
+            where.title = {
                 [Op.like]: `%${keyword}%`
             }
         }
