@@ -1,11 +1,35 @@
 const {Category, Barang} = require('../models')
+const { Op } = require("sequelize")
 var pdf = require("pdf-creator-node")
 var fs = require("fs")
 const path = require('path')
 
 module.exports = {
     index: async(req, res) => {
+        const {type, keyword} = req.query
+        const where = {}
+        if(type){
+            if(req.decoded.role === 'Admin'){
+                if(type !== 'Semua Tipe'){
+                    where.type = type
+                }
+            }else{
+                where.type = req.decoded.role
+            }
+        }else{
+            if(req.decoded.role !== 'Admin'){
+                where.type = req.decoded.role
+            }
+        }
+
+        if(keyword){
+            where.title = {
+                [Op.like]: `%${keyword}%`
+            }
+        }
+        console.log(where)
         let barang = await Barang.findAll({
+            where: where,
             include: [{
                 model: Category,
                 as: 'category',
@@ -56,7 +80,6 @@ module.exports = {
                     status: true
                 })
             }catch(err){
-                console.log(err)
                 res.status(404).json({message : 'Terjadi kesalahan saat mengunduh', status: false})
             }
         }

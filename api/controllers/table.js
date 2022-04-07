@@ -27,8 +27,6 @@ module.exports = {
             }
         }
 
-        console.log(where)
-
         if(keyword){
             where.title = {
                 [Op.like]: `%${keyword}%`

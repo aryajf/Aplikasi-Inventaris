@@ -8,13 +8,29 @@
             <div v-else class="col-md-4">
                 <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
             </div>
-            <div class="col-md-4" v-if="type.name && barangData && barangData.labels.length != 0">
-                <h4 class="text-center my-3">Jumlah Barang Lab {{type.name}}</h4>
-                <Chart type="pie" :data="barangData" />
-            </div>
-            <div v-else class="col-md-4">
-                <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
-            </div>
+            <template v-if="user.role == 'Admin'">
+                <template v-if="type.name && type.name != 'Semua Tipe'">
+                    <div class="col-md-4" v-if="barangData && barangData.labels.length != 0">
+                        <h4 class="text-center my-3">Jumlah Barang Lab {{type.name}}</h4>
+                        <Chart type="pie" :data="barangData" />
+                    </div>
+                    <div v-else class="col-md-4">
+                        <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+                    </div>
+                </template>
+                <div v-else class="col-md-4">
+                    <Message :closable="false" severity="info">Lab belum dipilih</Message>
+                </div>
+            </template>
+            <template v-else>
+                <div class="col-md-4" v-if="barangData && barangData.labels.length != 0">
+                    <h4 class="text-center my-3">Jumlah Barang Lab {{type.name}}</h4>
+                    <Chart type="pie" :data="barangData" />
+                </div>
+                <div v-else class="col-md-4">
+                    <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -25,10 +41,14 @@ import Chart from 'primevue/chart'
 export default {
     created() {
         this.chartType()
+        if(this.user.role !== 'Admin'){
+            this.chartBarang(this.user.role)
+        }
     },
     computed: {
         ...mapGetters({
             btnLoading: 'btnLoading',
+            user: 'auth/user',
         }),
     },
     props: {
@@ -36,7 +56,7 @@ export default {
     },
     watch: {
         type() {
-            this.chartBarang()
+            this.chartBarang(this.type.name)
         },
     },
     methods: {
@@ -55,8 +75,8 @@ export default {
                 }
             })
         },
-        chartBarang() {
-            this.$store.dispatch("chartBarang", this.type.name).then(res => {
+        chartBarang(type) {
+            this.$store.dispatch("chartBarang", type).then(res => {
                 console.log(res)
                 if(res.status === 200){
                     this.barangData = {

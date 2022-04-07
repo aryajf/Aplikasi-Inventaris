@@ -57,7 +57,6 @@ export default createStore({
       let barang = await axios.get(`chart-barang?type=${type}`).then(res => {
         return res
       }).catch(err => {
-        window.notyf.error(err.response.data.message)
         return err.response
       })
 
@@ -72,29 +71,18 @@ export default createStore({
 
       return types
     },
-    async downloadPdf({commit}){
+    async downloadPdf({commit}, {type, keyword}){
       commit('SET_BUTTON_LOADING', true, {root: true})
-      let pdf = await axios.get(`pdf`).then(res => {
+      let pdf = await axios.get(`pdf?type=${type}&keyword=${keyword}`).then(res => {
         commit('SET_BUTTON_LOADING', false, {root: true})
         return window.location.href = res.data.pdf;
       }).catch(err => {
         commit('SET_BUTTON_LOADING', false, {root: true})
-                window.notyf.error(err.response.data.message)
+        window.notyf.error(err.response.data.message)
         return err.response
       })
       return pdf
     },
-    async downloadPdfShow({commit}, url){
-      commit('SET_BUTTON_LOADING', true, {root: true})
-      let pdf = await axios.get(`pdf/${url}`).then(res => {
-        commit('SET_BUTTON_LOADING', false, {root: true})
-        return window.location.href = res.data.pdf;
-      }).catch(err => {
-        commit('SET_BUTTON_LOADING', false, {root: true})
-        return err.response
-      })
-      return pdf
-    }
   },
   getters: {
     barang_lab(state){

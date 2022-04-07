@@ -7,7 +7,7 @@
                 <h4 class="text-center my-3">Jumlah Data Barang</h4>
                 <div class="d-flex justify-content-between">
                     <div class="form-group">
-                        <div class="row">
+                        <div class="row" v-if="user.role === 'Admin'">
                             <div class="col-md-7">
                                 <div class="p-input-icon-right w-100">
                                     <i class="pi pi-spin pi-spinner" v-if="searchLoading" />
@@ -17,6 +17,15 @@
                             </div>
                             <div class="col-md-5">
                                 <Dropdown :filter="true" v-model="type" :options="types" optionLabel="name" placeholder="Pilih Tipe" class="w-100" />
+                            </div>
+                        </div>
+                        <div class="row" v-else>
+                            <div class="col-md-12">
+                                <div class="p-input-icon-right w-100">
+                                    <i class="pi pi-spin pi-spinner" v-if="searchLoading" />
+                                    <i class="pi pi-search" v-else />
+                                    <InputText type="text" class="w-100" placeholder="Cari barang disini" v-model="keyword" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,7 +101,12 @@ export default {
     components: { Chart, AdminHeader },
     methods: {
         downloadPdf(){
-            this.$store.dispatch('downloadPdf')
+            this.$store.dispatch('downloadPdf',
+            {
+                type: this.type.name,
+                keyword: this.keyword
+            }
+            )
         },
         getBarang(){
             this.$store.dispatch('allBarang',

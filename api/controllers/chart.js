@@ -33,15 +33,21 @@ module.exports = {
     barang: async(req, res) => {
         try{
             let {type} = req.query
+            const where = {}
             if(!type){
                 return res.status(404).json({message: 'Belum memilih tipe', status: false})
             }else{
                 if(type === 'Semua Tipe'){
                     return res.status(404).json({message: 'Belum memilih tipe', status: false})
                 }
+                if(req.decoded.role === 'Admin'){
+                    where.type = type
+                }else{
+                    where.type = req.decoded.role
+                }
             }
 
-            let barang = await Barang.findAll({where: {type: type}})
+            let barang = await Barang.findAll({where: where})
             if(!barang){
                 res.status(404).json({message: 'Barang belum ditambahkan', status: false})
             }else{

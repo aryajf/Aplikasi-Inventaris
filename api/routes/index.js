@@ -60,9 +60,6 @@ router.route('/barang')
 router.route('/barang/stok/:id')
   .put(checkAuth, Asisten, barang.updateStok)
 
-router.route('/barang/search/:keyword')
-  .get(checkAuth, barang.search)
-
 router.route('/barang/:id')
   .get(checkAuth, barang.show)
   .put(checkAuth, Asisten, fileUpload.single('gambar'), barang.update)

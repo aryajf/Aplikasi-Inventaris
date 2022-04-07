@@ -9,9 +9,10 @@ const {compressImage, deleteFile, makeDirectory, getPagination, getPagingData} =
 
 module.exports = {
     index: async(req, res) => {
-        let { page, category } = req.query
+        let { page, category, keyword } = req.query
         const { limit, offset } = getPagination(page, 12)
         let categoryName = 'Semua Barang'
+        const where = {}
 
         if(category){
             let categoryData = await Category.findOne({where: {category_id: category}})
@@ -19,9 +20,27 @@ module.exports = {
                 return res.status(404).json({message : 'Kategori tidak ditemukan', status: false})
             }
             categoryName = categoryData.title
+            where.category_id = category
+        }
+        
+        if(keyword){
+            where.title = {
+                [Op.like]: `%${keyword}%`
+            }
         }
 
-        await getBarang(limit, offset, category).then(async (data) => {
+        if(req.decoded.role != 'Admin'){
+            where.type = req.decoded.role
+        }
+
+        await Barang.findAndCountAll({
+            where: where,
+            include: {
+                model : Category,
+                as: 'category'
+            },
+            limit,offset,order:[['updatedAt', 'ASC']]
+        }).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
@@ -42,46 +61,6 @@ module.exports = {
             }else{res.json({totalItems : 0, data: dataPaginate, message : 'Belum ada barang', status: false})}
         }).catch(() => {
             res.status(404).json({message : 'Barang tidak ditemukan', status: false})
-        })
-    },
-    search: async(req, res) => {
-        if(req.params.keyword == ''){
-            res.status(404).json({message : 'Barang tidak ditemukan', status: false})
-        }
-
-        let { page, category } = req.query
-        const { limit, offset } = getPagination(page, 12)
-        let categoryName = 'Semua Produk'
-
-        if(category){
-            let categoryData = await Category.findOne({where: {id: category, type: 'Barang'}})
-            if(categoryData == null){
-                return res.status(404).json({message : 'Kategori tidak ditemukan', status: false})
-            }
-            categoryName = categoryData.title
-        }
-        
-        await getBarang(limit, offset, category, req.params.keyword).then(async(data) => {
-            const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
-
-            if(dataPaginate.length != 0 && !isNaN(currentPage)){
-                res.json({
-                    categoryName: categoryName,
-                    totalItems : totalItems,
-                    limitItems : limit,
-                    totalPages : totalPages,
-                    currentPage : currentPage,
-                    barang : dataPaginate,
-                    message: 'Barang berhasil ditampilkan',
-                    request: {
-                        method: req.method,
-                        url: process.env.BASE_URL + 'barang'
-                    },
-                    status: true
-                })
-            }else{res.json({totalItems : 0, data: dataPaginate, message : 'Barang tidak ditemukan', status: false})}
-        }).catch(() => {
-            res.status(404).json({message : 'Terjadi kesalahan saat mencari barang', status: false})
         })
     },
     show: async(req, res) => {
@@ -281,44 +260,6 @@ function findBarang(id){
         model : Category,
         as: 'category'
     }]})
-}
-
-async function getBarang(limit, offset, category, keyword){
-    let statement
-
-    if(keyword){
-        statement = {
-            where: {
-                title:{}
-            },
-            include: {
-                model : Category,
-                as: 'category'
-            },
-            limit,offset,order:[['updatedAt', 'ASC']]
-        }
-    }else{
-        statement = {
-            where: {},
-            include: {
-                model : Category,
-                as: 'category'
-            },
-            limit,offset,order:[['updatedAt', 'ASC']]
-        }
-    }
-
-    if(category){
-        statement.where.category_id = category
-    }
-    
-    if(keyword){
-        statement.where.title = {
-            [Op.like]: `%${keyword}%`
-        }
-    }
-
-    return Barang.findAndCountAll(statement)
 }
 
 function barangValidation(dataRequest){
