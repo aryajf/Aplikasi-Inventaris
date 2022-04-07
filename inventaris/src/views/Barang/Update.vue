@@ -144,7 +144,7 @@ export default {
         },
         getBarang() {
             this.$store
-                .dispatch("barang/show", this.$route.params.slug)
+                .dispatch("barang/show", this.$route.params.id)
                 .then((res) => {
                     this.form.description = res.data.barang.description
                     this.form.category.id = res.data.barang.category.id
@@ -215,7 +215,7 @@ export default {
 
             this.$store
                 .dispatch("barang/updateBarang", [
-                    this.$route.params.slug,
+                    this.$route.params.id,
                     data,
                 ])
         },

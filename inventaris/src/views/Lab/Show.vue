@@ -30,7 +30,7 @@
                             <tbody>
                                 <tr v-for="(barang, index) in barang.barang" :key="barang.id">
                                     <td class="fw-bold text-center">{{ index+1 }}</td>
-                                    <td class="text-center"><router-link :to="'/barang/'+barang.slug">{{barang.title}}</router-link></td>
+                                    <td class="text-center"><router-link :to="'/barang/'+barang.id">{{barang.title}}</router-link></td>
                                     <td class="text-center">{{barang.category.title}}</td>
                                     <td class="fw-bold text-center">{{barang.tersedia}}</td>
                                     <td class="fw-bold text-center">{{barang.dipakai}}</td>

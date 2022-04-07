@@ -40,9 +40,7 @@ router.get('/', async function(req, res, next) {
 
 // AUTH
 router.get('/all-barang', checkAuth, table.allBarang)
-// router.get('/all-barang/search/:keyword', checkAuth, Admin, table.searchAllBarang)
-// router.get('/all-barang/search/:keyword/:type', checkAuth, table.searchShowBarang)
-// router.get('/all-barang/:type', checkAuth, table.showBarang)
+router.get('/chart-type', checkAuth, chart.type)
 router.get('/chart-barang', checkAuth, chart.barang)
 router.get('/chart-categories', checkAuth, chart.categories)
 router.post('/login', auth.login)
@@ -53,21 +51,20 @@ router.post('/password/change', checkAuth, auth.changePassword)
 
 // PDF
 router.get('/pdf', checkAuth, pdf.index)
-router.get('/pdf/:type', checkAuth, pdf.show)
 
 // BARANG
 router.route('/barang')
-  .get(checkAuth, Asisten, barang.index)
+  .get(checkAuth, barang.index)
   .post(checkAuth, Asisten, fileUpload.single('gambar'), barang.store)
   
-router.route('/barang/stok/:slug')
+router.route('/barang/stok/:id')
   .put(checkAuth, Asisten, barang.updateStok)
 
 router.route('/barang/search/:keyword')
-  .get(checkAuth, Asisten, barang.search)
+  .get(checkAuth, barang.search)
 
-router.route('/barang/:slug')
-  .get(checkAuth, Asisten, barang.show)
+router.route('/barang/:id')
+  .get(checkAuth, barang.show)
   .put(checkAuth, Asisten, fileUpload.single('gambar'), barang.update)
   .delete(checkAuth, Asisten, barang.delete)
 

@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <img v-if="user.avatar" :src="apiURL+'images/avatars/'+user.avatar" :alt="authenticated.nama" class="w-100 rounded-circle">
-                                    <img v-else src="@/assets/images/user.png" :alt="authenticated.nama" class="w-100 rounded-circle">
+                                    <img v-else src="@/assets/images/no-avatar.png" :alt="authenticated.nama" class="w-100 rounded-circle">
                                 </div>
                                 <div class="col-md-9 p-0 d-flex align-items-center">
                                     <div>
@@ -51,18 +51,8 @@
                                     </router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link to="/lab/dasar" class="nav-link">
-                                        <i class="uil uil-edit-alt me-2"></i> Lab Dasar
-                                    </router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <router-link to="/lab/menengah" class="nav-link">
-                                        <i class="uil uil-edit-alt me-2"></i> Lab Menengah
-                                    </router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <router-link to="/lab/lanjut" class="nav-link">
-                                        <i class="uil uil-edit-alt me-2"></i> Lab Lanjut
+                                    <router-link to="/history" class="nav-link">
+                                        <i class="uil uil-clock me-2"></i> History
                                     </router-link>
                                 </li>
 
@@ -81,8 +71,8 @@
                                 <p class="nav-heading" v-if="barang.length !== 0 && user.role == 'Admin'">ITEMS</p>
                                 <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
                                 <template v-if="barang.length !== 0">
-                                    <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
-                                        <router-link :to="'/barang/'+item.slug" class="nav-link">
+                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
+                                        <router-link :to="'/barang/'+item.id" class="nav-link">
                                             <i class="uil uil-box me-2"></i> {{ item.title }}
                                         </router-link>
                                     </li>
@@ -116,22 +106,22 @@
                             <div class="offcanvas-body">
                                 <div class="user-info">
                                     <div class="row">
-                                        <!-- <template v-if="user.length != 0">
+                                        <template v-if="user.length != 0">
                                             <div class="col-3 d-flex align-items-center">
-                                                <div v-if="user.data.avatar">
-                                                    <img :src="`${apiURL}images/avatar/${user.data.avatar}`" :alt="user.data.avatar" class="w-100 rounded-circle">
+                                                <div v-if="user.avatar">
+                                                    <img :src="`${apiURL}images/avatar/${user.avatar}`" :alt="user.avatar" class="w-100 rounded-circle">
                                                 </div>
                                                 <div v-else>
-                                                    <img src="@/assets/images/no-avatar.png" :alt="user.data.nama" class="w-100 rounded-circle">
+                                                    <img src="@/assets/images/no-avatar.png" :alt="authenticated.nama" class="w-100 rounded-circle">
                                                 </div>
                                             </div>
                                             <div class="col-9 p-0 d-flex align-items-center">
                                                 <div>
-                                                    <p class="p-0 m-0">{{ user.data.nama }}</p>
-                                                    <span class="badge bg-by text-dark">{{ user.data.role }}</span>
+                                                    <p class="p-0 m-0">{{ authenticated.nama }}</p>
+                                                    <span class="badge bg-white text-dark"><span v-if="authenticated.role != 'Admin'">Asisten Lab </span>{{ authenticated.role }}</span>
                                                 </div>
                                             </div>
-                                        </template> -->
+                                        </template>
                                     </div>
                                 </div>
                                 
@@ -192,8 +182,8 @@
                                                 <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
                                                 <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
                                                 <template v-if="barang.totalItems !== 0">
-                                                    <li v-for="item of barang.barang" :key="item.slug" class="nav-item">
-                                                        <router-link :to="'/barang/'+item.slug" class="nav-link">
+                                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
+                                                        <router-link :to="'/barang/'+item.id" class="nav-link">
                                                             <i class="uil uil-box me-2"></i> {{ item.title }}
                                                         </router-link>
                                                     </li>

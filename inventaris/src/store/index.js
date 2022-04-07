@@ -11,7 +11,6 @@ export default createStore({
     btnLoading: false,
     formErrors: [],
     barang_lab: [],
-    show_lab: []
   },
   mutations: {
     SET_BUTTON_LOADING(state, status){
@@ -23,57 +22,27 @@ export default createStore({
     SET_BARANG_LAB(state, status){
       state.barang_lab = status
     },
-    SET_SHOW_BARANG_LAB(state, status){
-      state.show_lab = status
-    },
     SET_FORM_ERRORS(state, errors){
       state.formErrors = errors
     },
   },
   actions: {
-    async allBarang({commit}){
-      let barang = await axios.get(`all-barang`).then(res => {
+    async allBarang({commit}, data){
+      try{
+        let res
+        if(data){
+          if(data.page == undefined){
+            data.page = 0
+          }
+          res = await axios.get(`all-barang?&type=${data.type}&page=${data.page}&keyword=${data.keyword}`)
+        }else{
+            res = await axios.get(`all-barang`)
+        }
         commit('SET_BARANG_LAB', res.data)
         return res
-      }).catch(err => {
-        return err.response
-      })
-
-      return barang
-    },
-    async searchAllBarang({commit}, data){
-      commit('SET_SEARCH_LOADING', true, {root: true})
-      try{
-          let res = await axios.get(`all-barang/search/${data.keyword}`) 
-          commit('SET_SEARCH_LOADING', false, {root: true})
-          commit('SET_BARANG_LAB', res.data)
-          return res.data
       }catch(err){
-          commit('SET_SEARCH_LOADING', false, {root: true})
-          return err
+          return err.response
       }
-    },
-    async searchShowBarang({commit}, data){
-      commit('SET_SEARCH_LOADING', true, {root: true})
-      try{
-          let res = await axios.get(`all-barang/search/${data.keyword}/${data.type}`) 
-          commit('SET_SEARCH_LOADING', false, {root: true})
-          commit('SET_SHOW_BARANG_LAB', res.data)
-          return res.data
-      }catch(err){
-          commit('SET_SEARCH_LOADING', false, {root: true})
-          return err
-      }
-    },
-    async showAllBarang({commit}, type){
-      let barang = await axios.get(`all-barang/${type}`).then(res => {
-        commit('SET_SHOW_BARANG_LAB', res.data)
-        return res
-      }).catch(err => {
-        return err.response
-      })
-
-      return barang
     },
     async chartCategories(){
       let categories = await axios.get(`chart-categories`).then(res => {
@@ -84,14 +53,24 @@ export default createStore({
 
       return categories
     },
-    async chartBarang(){
-      let categories = await axios.get(`chart-barang`).then(res => {
+    async chartBarang(_, type){
+      let barang = await axios.get(`chart-barang?type=${type}`).then(res => {
+        return res
+      }).catch(err => {
+        window.notyf.error(err.response.data.message)
+        return err.response
+      })
+
+      return barang
+    },
+    async chartType(){
+      let types = await axios.get(`chart-type`).then(res => {
         return res
       }).catch(err => {
         return err.response
       })
 
-      return categories
+      return types
     },
     async downloadPdf({commit}){
       commit('SET_BUTTON_LOADING', true, {root: true})

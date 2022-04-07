@@ -22,9 +22,9 @@ export default({
         SET_BARANG(state, data){
             state.barang = data
         },
-        REMOVE_BARANG(state, slug){
+        REMOVE_BARANG(state, id){
             state.barang.splice(state.barang.findIndex(function(i){
-                return i.slug === slug;
+                return i.id === id;
             }), 1);
         },
     },
@@ -39,9 +39,9 @@ export default({
                 return err
             }
         },
-        async show({commit}, slug){
+        async show({commit}, id){
             try{
-                let response = await axios.get(`barang/${slug}`)
+                let response = await axios.get(`barang/${id}`)
                 commit('SET_BARANG', response.data.barang)
                 return response
             }catch(err){
@@ -57,7 +57,7 @@ export default({
                 setTimeout(function () {
                     window.notyf.success(response.data.message)
                     commit('SET_BUTTON_LOADING', false, {root: true})        
-                    router.push(`/barang/${response.data.data.slug}`)
+                    router.push(`/barang/${response.data.data.id}`)
                 }, 3000)
                 return response
             }catch(err){
@@ -71,16 +71,16 @@ export default({
                 return err.response
             }
         },
-        async updateBarang({commit, dispatch}, [slug, credentials]){
+        async updateBarang({commit, dispatch}, [id, credentials]){
             commit('SET_BUTTON_LOADING', true, {root: true})
             commit('SET_FORM_ERRORS', [], {root: true})
             try{
-                await axios.put(`barang/${slug}`, credentials).then(response =>{
+                await axios.put(`barang/${id}`, credentials).then(response =>{
                     dispatch('getBarang')
                     setTimeout(function () {
                         window.notyf.success(response.data.message)
                         commit('SET_BUTTON_LOADING', false, {root: true})        
-                        router.push(`/barang/${response.data.data.slug}`)
+                        router.push(`/barang/${response.data.data.id}`)
                     }, 3000)
                     return response
                 })
@@ -95,11 +95,11 @@ export default({
                 return err.response
             }
         },
-        async updateStok({commit, dispatch}, [slug, credentials]){
+        async updateStok({commit, dispatch}, [id, credentials]){
             commit('SET_BUTTON_LOADING', true, {root: true})
             commit('SET_FORM_ERRORS', [], {root: true})
             try{
-                await axios.put(`barang/stok/${slug}`, credentials).then(response =>{
+                await axios.put(`barang/stok/${id}`, credentials).then(response =>{
                     dispatch('getBarang')
                     window.notyf.success(response.data.message)
                     commit('SET_BUTTON_LOADING', false, {root: true})
@@ -116,14 +116,14 @@ export default({
                 return err.response
             }
         },
-        async deleteBarang({state,commit, dispatch}, slug){
+        async deleteBarang({state,commit, dispatch}, id){
             commit('SET_BUTTON_LOADING', true, {root: true})
             try{
-                let response = await axios.delete(`barang/${slug}`)
+                let response = await axios.delete(`barang/${id}`)
                 commit('SET_BUTTON_LOADING', false, {root: true})        
                 window.notyf.success(response.data.message)
                 if(state.barang.length == 1){
-                    commit('REMOVE_BARANG', slug)
+                    commit('REMOVE_BARANG', id)
                 }
                 dispatch("getBarang")
                 return response

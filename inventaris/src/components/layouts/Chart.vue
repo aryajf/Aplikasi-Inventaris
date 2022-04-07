@@ -1,20 +1,21 @@
 <template>
-    <div>
-        <template v-if="categoriesData">
-            <div class="row d-flex justify-content-around align-items-center" v-if="categoriesData.labels.length != 0">
-                <div class="col-md-4">
-                    <h4 class="text-center my-3">Jumlah Stok Barang</h4>
-                    <Chart type="pie" :data="barangData" />
-                </div>
-                <div class="col-md-5">
-                    <h4 class="text-center my-3">Jumlah barang yang berada di kategori</h4>
-                    <Chart type="pie" :data="categoriesData" />
-                </div>
+    <div class="container">
+        <div class="row d-flex justify-content-around align-items-center">
+            <div class="col-md-4" v-if="typeData">
+                <h4 class="text-center my-3">Jumlah Barang Laboratorium</h4>
+                <Chart type="pie" :data="typeData" />
             </div>
-            <template v-else>
-                <Message :closable="false" severity="info">Kategori belum ditambahkan</Message>
-            </template>
-        </template>
+            <div v-else class="col-md-4">
+                <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+            </div>
+            <div class="col-md-4" v-if="type.name && barangData && barangData.labels.length != 0">
+                <h4 class="text-center my-3">Jumlah Barang Lab {{type.name}}</h4>
+                <Chart type="pie" :data="barangData" />
+            </div>
+            <div v-else class="col-md-4">
+                <Message :closable="false" severity="info">Barang belum ditambahkan</Message>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -23,29 +24,40 @@ import { mapGetters } from 'vuex'
 import Chart from 'primevue/chart'
 export default {
     created() {
-        this.getCharts()
+        this.chartType()
     },
     computed: {
         ...mapGetters({
             btnLoading: 'btnLoading',
         }),
     },
+    props: {
+        type: Object
+    },
+    watch: {
+        type() {
+            this.chartBarang()
+        },
+    },
     methods: {
-        getCharts() {
-            this.$store.dispatch("chartCategories").then(res => {
+        chartType() {
+            this.$store.dispatch("chartType").then(res => {
                 if(res.status === 200){
-                    this.categoriesData = {
-                        labels: res.data.categoriesName,
+                    this.typeData = {
+                        labels: res.data.typeName,
                         datasets: [
                             {
-                                data: res.data.categoriesStock,
-                                backgroundColor: res.data.categoriesColor
+                                data: res.data.typeStock,
+                                backgroundColor: res.data.typeColor
                             },
                         ]
                     }
                 }
             })
-            this.$store.dispatch("chartBarang").then(res => {
+        },
+        chartBarang() {
+            this.$store.dispatch("chartBarang", this.type.name).then(res => {
+                console.log(res)
                 if(res.status === 200){
                     this.barangData = {
                         labels: res.data.barangName,
@@ -63,8 +75,8 @@ export default {
     components: { Chart },
     data() {
         return {
+            typeData: null,
             barangData: null,
-            categoriesData: null,
         }
     }
 }

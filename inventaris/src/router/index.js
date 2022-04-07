@@ -35,12 +35,6 @@ const routes = [
     beforeEnter: (to, from, next) => notAuthenticated(next)
   },
   {
-    path: '/lab/:type',
-    name: 'Show Lab',
-    component: () => import(/* webpackChunkName: "Show Lab" */ '../views/Lab/Show.vue'),
-    beforeEnter: (to, from, next) => notAuthenticated(next)
-  },
-  {
     path: '/category',
     name: 'List Category',
     component: () => import(/* webpackChunkName: "category" */ '../views/Category/Category.vue'),
@@ -59,13 +53,13 @@ const routes = [
     beforeEnter: (to, from, next) => Asisten(next)
   },
   {
-    path: '/barang/edit/:slug',
+    path: '/barang/edit/:id',
     name: 'Update Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Update.vue'),
     beforeEnter: (to, from, next) => Asisten(next)
   },
   {
-    path: '/barang/:slug',
+    path: '/barang/:id',
     name: 'Show Barang',
     component: () => import(/* webpackChunkName: "barang" */ '../views/Barang/Show.vue'),
     beforeEnter: (to, from, next) => notAuthenticated(next)

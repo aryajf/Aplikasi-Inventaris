@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DeleteModal v-if="barang" :barang_slug="barang.slug"></DeleteModal>
+        <DeleteModal v-if="barang" :barang_id="barang.id"></DeleteModal>
         <div class="container-fluid" v-if="barang">
             <div class="barang-box mb-3 bg-light rounded-top">
                 <div v-if="user.role != 'Admin'" class="d-flex justify-content-between align-items-center mb-2">
@@ -24,7 +24,8 @@
                     <div class="col-md-4 col-12 mb-3">
                         <div class="count-box d-flex justify-content-between align-items-center bg-az">
                             <div>Total Stok</div>
-                            <div class="stock">{{ barang.tersedia + barang.dipakai + barang.rusak }}</div>
+                            <div class="stock" v-if="!isNaN(parseInt(barang.tersedia) + parseInt(barang.dipakai) + parseInt(barang.rusak))">{{ parseInt(barang.tersedia) + parseInt(barang.dipakai) + parseInt(barang.rusak) }}</div>
+                            <div class="stock" v-else>Tidak Valid</div>
                         </div>
                     </div>
                 </div>
@@ -33,21 +34,21 @@
                 <form action="#" @submit.prevent="updateStok">
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <div><label for="withoutgrouping">Stok Tersedia</label></div>
-                            <InputNumber v-if="user.role != 'Admin'" class="w-100" id="withoutgrouping" v-model="barang.tersedia" mode="decimal" placeholder="Stok Tersedia" :useGrouping="false" />
+                            <div><label for="withoutgrouping">Stok Tersedia <span class="text-danger text-sm" v-if="formErrors.tersedia">*{{formErrors.tersedia[0]}}</span></label></div>
+                            <input v-if="user.role != 'Admin'" type="text" class="form-control" :class="{'is-invalid': formErrors.tersedia && formErrors.tersedia.length > 0}" placeholder="Stok Tersedia" v-model="barang.tersedia">
                             <div v-else>{{barang.tersedia}}</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <div><label for="withoutgrouping">Stok Dipakai</label></div>
-                            <InputNumber v-if="user.role != 'Admin'" class="w-100" id="withoutgrouping" v-model="barang.dipakai" mode="decimal" placeholder="Stok Dipakai" :useGrouping="false" />
+                            <div><label for="withoutgrouping">Stok Dipakai <span class="text-danger text-sm" v-if="formErrors.dipakai">*{{formErrors.dipakai[0]}}</span></label></div>
+                            <input v-if="user.role != 'Admin'" type="text" class="form-control" :class="{'is-invalid': formErrors.dipakai && formErrors.dipakai.length > 0}" placeholder="Stok Dipakai" v-model="barang.dipakai">
                             <div v-else>{{barang.dipakai}}</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <div><label for="withoutgrouping">Stok Rusak</label></div>
-                            <InputNumber v-if="user.role != 'Admin'" class="w-100" id="withoutgrouping" v-model="barang.rusak" mode="decimal" placeholder="Stok Rusak" :useGrouping="false" />
+                            <div><label for="withoutgrouping">Stok Rusak <span class="text-danger text-sm" v-if="formErrors.rusak">*{{formErrors.rusak[0]}}</span></label></div>
+                            <input v-if="user.role != 'Admin'" type="text" class="form-control" :class="{'is-invalid': formErrors.rusak && formErrors.rusak.length > 0}" placeholder="Stok Rusak" v-model="barang.rusak">
                             <div v-else>{{barang.rusak}}</div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div v-if="user.role != 'Admin'" class="col-md-4 mb-3">
                             <button type="submit" class="btn bg-purple btn-sm d-flex" :disabled="btnLoading">
                                 Simpan
                                 <template v-if="btnLoading">
@@ -83,26 +84,26 @@ export default {
         }),
     },
     mounted(){
-        this.url = this.$route.params.slug;
+        this.url = this.$route.params.id;
         this.getBarang()
     },
     created() {
         this.$watch(
             () => this.$route.params,
                 () => {
-                    this.url = this.$route.params.slug;
+                    this.url = this.$route.params.id;
                     this.getBarang()
                 }
             )
     },
     methods: {
         getBarang() {
-            this.$store.dispatch("barang/show", this.$route.params.slug)
+            this.$store.dispatch("barang/show", this.$route.params.id)
         },
         updateStok() {
             this.$store
                 .dispatch("barang/updateStok", [
-                    this.$route.params.slug,
+                    this.$route.params.id,
                     this.barang,
                 ])
         },

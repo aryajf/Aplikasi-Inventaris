@@ -16,10 +16,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT
       },
-      slug: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       gambar: {
         allowNull: false,
         type: Sequelize.STRING

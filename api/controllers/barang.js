@@ -4,7 +4,7 @@ const path = require('path')
 const barangGambarPath = path.join(__dirname, '../public/images/barang/')
 const Validator = require('validatorjs')
 const validatorMessage = require('../config/validatorMessage')
-const {compressImage, deleteFile, makeDirectory, checkSlug, createSlug, getPagination, getPagingData} = require('../config/mixins')
+const {compressImage, deleteFile, makeDirectory, getPagination, getPagingData} = require('../config/mixins')
 
 
 module.exports = {
@@ -85,15 +85,14 @@ module.exports = {
         })
     },
     show: async(req, res) => {
-        console.log(req.params.slug)
         try{
-            const barang = await findBarang(req.params.slug)
+            const barang = await findBarang(req.params.id)
             res.json({
                 barang : barang,
                 message: 'Item berhasil ditampilkan',
                 request: {
                     method: req.method,
-                    url: process.env.BASE_URL + 'barang/' + req.params.slug
+                    url: process.env.BASE_URL + 'barang/' + req.params.id
                 },
                 status: true
             })
@@ -102,13 +101,9 @@ module.exports = {
         }
     },
     store: async(req, res) => {
-        let slug, title = req.body.title
-        title == null ? slug = title : slug = createSlug(title)
-
         let barangReq = {
             title: req.body.title,
             description: req.body.description,
-            slug: slug,
             gambar: '',
             category_id: req.body.category_id,
             type: req.decoded.role,
@@ -127,10 +122,6 @@ module.exports = {
         }
 
         try{
-            let checkSlug = await Barang.findOne({where: {slug: barangReq.slug}})
-            if(checkSlug){
-                barangReq.slug = createSlug(title) + '-' + 1
-            }
             let barang = await Barang.create(barangReq)
             
             // 1. Make directory 2. Compress image
@@ -138,7 +129,7 @@ module.exports = {
             compressImage('public/uploads/'+req.file.filename, barangGambarPath, req.file.path)
             res.status(201).json({
                 data: {
-                    slug: barang.slug,
+                    id: barang.id,
                     title: barang.title,
                 },
                 message: 'Item berhasil ditambah',
@@ -158,7 +149,7 @@ module.exports = {
         }
     },
     update: async(req, res) => {
-        let barang = await findBarang(req.params.slug)
+        let barang = await findBarang(req.params.id)
         if(barang == null){
             res.status(404).json({message : 'Item tidak ditemukan', status: false})
             deleteFile(req.file.path)
@@ -198,13 +189,13 @@ module.exports = {
             barang.update(barangReq)
             res.status(201).json({
                 data: {
-                    slug: barang.slug,
+                    id: barang.id,
                     title: barang.title,
                 },
                 message: 'Item berhasil diubah',
                 request: {
                     method: req.method,
-                    url: process.env.BASE_URL + 'barang/' + req.params.slug
+                    url: process.env.BASE_URL + 'barang/' + req.params.id
                 },
                 status: true,
             })
@@ -217,7 +208,7 @@ module.exports = {
         }
     },
     updateStok: async(req, res) => {
-        let barang = await findBarang(req.params.slug)
+        let barang = await findBarang(req.params.id)
         if(barang == null){
             res.status(404).json({message : 'Item tidak ditemukan', status: false})
             deleteFile(req.file.path)
@@ -230,17 +221,21 @@ module.exports = {
             rusak: req.body.rusak,
         }
 
+        if(stokValidation(barangReq) != null){
+            return res.status(400).send(stokValidation(barangReq))
+        }
+
         try{
             barang.update(barangReq)
             res.status(201).json({
                 data: {
-                    slug: barang.slug,
+                    id: barang.id,
                     title: barang.title,
                 },
                 message: 'Item berhasil diubah',
                 request: {
                     method: req.method,
-                    url: process.env.BASE_URL + 'barang/stok/' + req.params.slug
+                    url: process.env.BASE_URL + 'barang/stok/' + req.params.id
                 },
                 status: true,
             })
@@ -253,7 +248,7 @@ module.exports = {
         }
     },
     delete: async(req, res) => {
-        let barang = await findBarang(req.params.slug)
+        let barang = await findBarang(req.params.id)
         if(barang != null){
             deleteFile(barangGambarPath + barang.gambar)
 
@@ -265,7 +260,7 @@ module.exports = {
                     message: 'Item berhasil dihapus',
                     request: {
                         method: req.method,
-                        url: process.env.BASE_URL + 'barang/' + req.params.slug
+                        url: process.env.BASE_URL + 'barang/' + req.params.id
                     },
                     status: true
                 })
@@ -281,8 +276,8 @@ module.exports = {
     
 }
 
-function findBarang(slug){
-    return Barang.findOne({where: {slug: slug}, include: [{
+function findBarang(id){
+    return Barang.findOne({where: {id: id}, include: [{
         model : Category,
         as: 'category'
     }]})
@@ -332,6 +327,22 @@ function barangValidation(dataRequest){
         description: 'required|min:3',
         gambar: 'required',
         category_id: 'required',
+    }
+    
+    let validation = new Validator(dataRequest, rules, validatorMessage)
+    if(validation.fails()){
+        return {
+            message: "Harap isi form dengan benar",
+            errors: validation.errors.errors
+        }
+    }
+}
+
+function stokValidation(dataRequest){
+    let rules = {
+        tersedia: 'required|numeric',
+        dipakai: 'required|numeric',
+        rusak: 'required|numeric',
     }
     
     let validation = new Validator(dataRequest, rules, validatorMessage)

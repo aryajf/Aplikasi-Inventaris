@@ -9,21 +9,25 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="text-center">Nama Barang</th>
+          <th class="text-center">Lab</th>
           <th class="text-center">Kategori</th>
-          <th class="text-center">Jumlah Lab Dasar</th>
-          <th class="text-center">Jumlah Lab Menengah</th>
-          <th class="text-center">Jumlah Lab Lanjut</th>
+          <th class="text-center">Nama Barang</th>
+          <th class="text-center">Jumlah Total</th>
+          <th class="text-center">Jumlah Tersedia</th>
+          <th class="text-center">Jumlah Dipakai</th>
+          <th class="text-center">Jumlah Rusak</th>
         </tr>
       </thead>
       <tbody>
         {{#each barang}}
         <tr>
-          <td class="text-center">{{this.title}}</td>
+          <td class="text-center">{{this.type}}</td>
           <td class="text-center">{{this.category}}</td>
-          <td class="text-center">{{this.dasar}}</td>
-          <td class="text-center">{{this.menengah}}</td>
-          <td class="text-center">{{this.lanjut}}</td>
+          <td class="text-center">{{this.title}}</td>
+          <td class="text-center">{{this.total}}</td>
+          <td class="text-center">{{this.tersedia}}</td>
+          <td class="text-center">{{this.dipakai}}</td>
+          <td class="text-center">{{this.rusak}}</td>
         </tr>
         {{/each}}
       </tbody>
