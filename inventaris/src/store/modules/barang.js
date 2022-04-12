@@ -5,6 +5,9 @@ export default({
     namespaced: true,
     state:{
         all_barang: [],
+        barang_dasar: [],
+        barang_menengah: [],
+        barang_lanjut: [],
         barang: [],
     },
     getters: {
@@ -14,10 +17,28 @@ export default({
         barang(state){
             return state.barang
         },
+        barang_dasar(state){
+            return state.barang_dasar
+        },
+        barang_menengah(state){
+            return state.barang_menengah
+        },
+        barang_lanjut(state){
+            return state.barang_lanjut
+        },
     },
     mutations: {
         SET_ALL_BARANG(state, data){
             state.all_barang = data
+        },
+        SET_ALL_BARANG_DASAR(state, data){
+            state.barang_dasar = data
+        },
+        SET_ALL_BARANG_MENENGAH(state, data){
+            state.barang_menengah = data
+        },
+        SET_ALL_BARANG_LANJUT(state, data){
+            state.barang_lanjut = data
         },
         SET_BARANG(state, data){
             state.barang = data
@@ -29,10 +50,17 @@ export default({
         },
     },
     actions: {
-        async getBarang({commit}, data){
+        async getBarang({commit, rootGetters}, data){
             try{
                 let res
                 data == null ? res = await axios.get('barang') : res = await axios.get(`barang?page=${data.page}`)
+                if(rootGetters['auth/authenticated'].role === 'Admin'){
+                    if(res.data.barang.length != 0){
+                        commit('SET_ALL_BARANG_DASAR', res.data.barang.filter((barang) => barang.type == 'Dasar'))
+                        commit('SET_ALL_BARANG_MENENGAH', res.data.barang.filter((barang) => barang.type == 'Menengah'))
+                        commit('SET_ALL_BARANG_LANJUT', res.data.barang.filter((barang) => barang.type == 'Lanjut'))
+                    }
+                }
                 commit('SET_ALL_BARANG', res.data)
                 return res.data
             }catch(err){
@@ -101,6 +129,7 @@ export default({
             try{
                 await axios.put(`barang/stok/${id}`, credentials).then(response =>{
                     dispatch('getBarang')
+                    dispatch('show', id)
                     window.notyf.success(response.data.message)
                     commit('SET_BUTTON_LOADING', false, {root: true})
                     return response

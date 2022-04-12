@@ -73,44 +73,62 @@ module.exports = {
                 })
             }
         }catch(err){
-            console.log(err)
             res.status(404).json({message : 'Terjadi kesalahan pada produk', status: false})
         }
     },
     categories: async(req, res) => {
-        // let category = await Category.findAll({
-        //     include: {
-        //         model : Barang,
-        //         as: 'barang'
-        //     }
-        // })
-        // try{
-        //     if(!category){
-        //         return res.status(404).json({message: 'Kategori belum ditambahkan', status: false})
-        //     }else{
-        //         const categoriesName = []
-        //         const categoriesStock = []
-        //         const categoriesColor = []
-        //         category.map(item => {
-        //             categoriesName.push(item.title)
-        //             categoriesStock.push(item.barang.length)
-        //             categoriesColor.push('#'+Math.floor(Math.random()*16777215).toString(16))
-        //         })
+        let {type} = req.query
+        const where = {}
+        if(!type){
+            if(req.decoded.role !== 'Admin'){
+                where.type = req.decoded.role
+            }else{
+                return res.status(404).json({message: 'Belum memilih tipe', status: false})
+            }
+        }else{
+            if(type === 'Semua Tipe'){
+                return res.status(404).json({message: 'Belum memilih tipe', status: false})
+            }
+            if(req.decoded.role === 'Admin'){
+                where.type = type
+            }else{
+                where.type = req.decoded.role
+            }
+        }
+        let category = await Category.findAll({
+            include: {
+                model : Barang,
+                as: 'barang'
+            },
+            where: where
+        })
+        try{
+            if(!category){
+                return res.status(404).json({message: 'Kategori belum ditambahkan', status: false})
+            }else{
+                const categoriesName = []
+                const categoriesStock = []
+                const categoriesColor = []
+                category.map(item => {
+                    categoriesName.push(item.title)
+                    categoriesStock.push(item.barang.length)
+                    categoriesColor.push('#'+Math.floor(Math.random()*16777215).toString(16))
+                })
                 
-        //         res.json({
-        //             categoriesName : categoriesName,
-        //             categoriesStock : categoriesStock,
-        //             categoriesColor : categoriesColor,
-        //             message: 'Total kategori berhasil ditampilkan',
-        //             request: {
-        //                 method: req.method,
-        //                 url: process.env.BASE_URL + 'product'
-        //             },
-        //             status: true
-        //         })
-        //     }
-        // }catch(err){
-        //     res.status(404).json({message : 'Terjadi kesalahan pada produk', status: false})
-        // }
+                res.json({
+                    categoriesName : categoriesName,
+                    categoriesStock : categoriesStock,
+                    categoriesColor : categoriesColor,
+                    message: 'Total kategori berhasil ditampilkan',
+                    request: {
+                        method: req.method,
+                        url: process.env.BASE_URL + 'product'
+                    },
+                    status: true
+                })
+            }
+        }catch(err){
+            res.status(404).json({message : 'Terjadi kesalahan pada produk', status: false})
+        }
     }
 }

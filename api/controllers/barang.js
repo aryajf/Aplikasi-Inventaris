@@ -1,4 +1,4 @@
-const {Category, User, Barang, Status} = require('../models')
+const {Category, User, History, Barang, Status} = require('../models')
 const { Op } = require("sequelize")
 const path = require('path')
 const barangGambarPath = path.join(__dirname, '../public/images/barang/')
@@ -9,10 +9,22 @@ const {compressImage, deleteFile, makeDirectory, getPagination, getPagingData} =
 
 module.exports = {
     index: async(req, res) => {
-        let { page, category, keyword } = req.query
+        let { type, page, category, keyword } = req.query
         const { limit, offset } = getPagination(page, 12)
         let categoryName = 'Semua Barang'
         const where = {}
+
+        if(type){
+            if(req.decoded.role === 'Admin'){
+                where.type = type
+            }else{
+                where.type = req.decoded.role
+            }
+        }else{
+            if(req.decoded.role !== 'Admin'){
+                where.type = req.decoded.role
+            }
+        }
 
         if(category){
             let categoryData = await Category.findOne({where: {category_id: category}})
@@ -29,19 +41,19 @@ module.exports = {
             }
         }
 
-        if(req.decoded.role != 'Admin'){
-            where.type = req.decoded.role
-        }
-
         await Barang.findAndCountAll({
             where: where,
-            include: {
+            include: [{
                 model : Category,
-                as: 'category'
-            },
+                as: 'category',
+            },{
+                model : History,
+                as: 'histories',
+            }],
             limit,offset,order:[['updatedAt', 'ASC']]
         }).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
+            console.log(dataPaginate)
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
                 res.json({
@@ -58,7 +70,7 @@ module.exports = {
                     },
                     status: true
                 })
-            }else{res.json({totalItems : 0, data: dataPaginate, message : 'Belum ada barang', status: false})}
+            }else{res.json({totalItems : 0, barang: dataPaginate, message : 'Belum ada barang', status: false})}
         }).catch(() => {
             res.status(404).json({message : 'Barang tidak ditemukan', status: false})
         })
@@ -206,6 +218,13 @@ module.exports = {
 
         try{
             barang.update(barangReq)
+            await History.create({
+                barang_id: barang.id,
+                user_id: req.decoded.id,
+                tersedia: barangReq.tersedia,
+                dipakai: barangReq.dipakai,
+                rusak: barangReq.rusak,
+            })
             res.status(201).json({
                 data: {
                     id: barang.id,
@@ -258,7 +277,14 @@ module.exports = {
 function findBarang(id){
     return Barang.findOne({where: {id: id}, include: [{
         model : Category,
-        as: 'category'
+        as: 'category',
+    },{
+        model : History,
+        as: 'histories',
+        include: {
+            model : User,
+            as: 'user',
+        }
     }]})
 }
 

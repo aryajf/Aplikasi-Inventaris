@@ -67,21 +67,47 @@
                                         <i class="uil uil-users-alt me-2"></i> Users
                                     </router-link>
                                 </li>
-
-                                <p class="nav-heading" v-if="barang.length !== 0 && user.role == 'Admin'">ITEMS</p>
-                                <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
-                                <template v-if="barang.length !== 0">
-                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
-                                        <router-link :to="'/barang/'+item.id" class="nav-link">
-                                            <i class="uil uil-box me-2"></i> {{ item.title }}
+                                <template v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
+                                    <p class="nav-heading">ITEMS</p>
+                                    <template v-if="barang.length !== 0">
+                                        <li v-for="item of barang.barang" :key="item.id" class="nav-item">
+                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                            </router-link>
+                                        </li>
+                                    </template>
+                                    <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
+                                        <router-link to="/barang/create" class="nav-link">
+                                            <i class="uil uil-plus me-2"></i> Tambah Item
                                         </router-link>
                                     </li>
                                 </template>
-                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
-                                    <router-link to="/barang/create" class="nav-link">
-                                        <i class="uil uil-plus me-2"></i> Tambah Item
-                                    </router-link>
-                                </li>
+                                <template v-else-if="user.role == 'Admin'">
+                                    <template v-if="barangDasar.length !== 0">
+                                        <p class="nav-heading">Lab Dasar</p>
+                                        <li v-for="item of barangDasar" :key="item.id" class="nav-item">
+                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                            </router-link>
+                                        </li>
+                                    </template>
+                                    <template v-if="barangMenengah.length !== 0">
+                                        <p class="nav-heading">Lab Menengah</p>
+                                        <li v-for="item of barangMenengah" :key="item.id" class="nav-item">
+                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                            </router-link>
+                                        </li>
+                                    </template>
+                                    <template v-if="barangLanjut.length !== 0">
+                                        <p class="nav-heading">Lab Lanjut</p>
+                                        <li v-for="item of barangLanjut" :key="item.id" class="nav-item">
+                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                            </router-link>
+                                        </li>
+                                    </template>
+                                </template>
                             </ul>
                         </div>
                     </div>
@@ -153,18 +179,8 @@
                                                     </router-link>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <router-link to="/lab/dasar" class="nav-link">
-                                                        <i class="uil uil-edit-alt me-2"></i> Lab Dasar
-                                                    </router-link>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <router-link to="/lab/menengah" class="nav-link">
-                                                        <i class="uil uil-edit-alt me-2"></i> Lab Menengah
-                                                    </router-link>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <router-link to="/lab/lanjut" class="nav-link">
-                                                        <i class="uil uil-edit-alt me-2"></i> Lab Lanjut
+                                                    <router-link to="/history" class="nav-link">
+                                                        <i class="uil uil-clock me-2"></i> History
                                                     </router-link>
                                                 </li>
                                                 <p class="nav-heading">APPS</p>
@@ -179,20 +195,47 @@
                                                     </router-link>
                                                 </li>
 
-                                                <p class="nav-heading" v-if="barang.totalItems !== 0 && user.role == 'Admin'">ITEMS</p>
-                                                <p class="nav-heading" v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">ITEMS</p>
-                                                <template v-if="barang.totalItems !== 0">
-                                                    <li v-for="item of barang.barang" :key="item.id" class="nav-item">
-                                                        <router-link :to="'/barang/'+item.id" class="nav-link">
-                                                            <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                <template v-if="user.role == 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
+                                                    <p class="nav-heading">ITEMS</p>
+                                                    <template v-if="barang.length !== 0">
+                                                        <li v-for="item of barang.barang" :key="item.id" class="nav-item">
+                                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                            </router-link>
+                                                        </li>
+                                                    </template>
+                                                    <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
+                                                        <router-link to="/barang/create" class="nav-link">
+                                                            <i class="uil uil-plus me-2"></i> Tambah Item
                                                         </router-link>
                                                     </li>
                                                 </template>
-                                                <li class="nav-item" v-if="user.role === 'Dasar' || user.role === 'Menengah' || user.role === 'Lanjut'">
-                                                    <router-link to="/barang/create" class="nav-link">
-                                                        <i class="uil uil-plus me-2"></i> Tambah Item
-                                                    </router-link>
-                                                </li>
+                                                <template v-else-if="user.role == 'Admin'">
+                                                    <template v-if="barangDasar.length !== 0">
+                                                        <p class="nav-heading">Lab Dasar</p>
+                                                        <li v-for="item of barangDasar" :key="item.id" class="nav-item">
+                                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                            </router-link>
+                                                        </li>
+                                                    </template>
+                                                    <template v-if="barangMenengah.length !== 0">
+                                                        <p class="nav-heading">Lab Menengah</p>
+                                                        <li v-for="item of barangMenengah" :key="item.id" class="nav-item">
+                                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                            </router-link>
+                                                        </li>
+                                                    </template>
+                                                    <template v-if="barangLanjut.length !== 0">
+                                                        <p class="nav-heading">Lab Lanjut</p>
+                                                        <li v-for="item of barangLanjut" :key="item.id" class="nav-item">
+                                                            <router-link :to="'/barang/'+item.id" class="nav-link">
+                                                                <i class="uil uil-box me-2"></i> {{ item.title }}
+                                                            </router-link>
+                                                        </li>
+                                                    </template>
+                                                </template>
                                             </ul>
                                         </nav>
                                     </div>
@@ -265,7 +308,10 @@ export default {
         ...mapGetters({
             user: 'auth/user',
             authenticated: 'auth/authenticated',
-            barang: 'barang/all_barang'
+            barang: 'barang/all_barang',
+            barangDasar: 'barang/barang_dasar',
+            barangMenengah: 'barang/barang_menengah',
+            barangLanjut: 'barang/barang_lanjut'
         }),
     },
     created(){

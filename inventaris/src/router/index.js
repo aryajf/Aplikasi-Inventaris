@@ -30,8 +30,14 @@ const routes = [
   },
   {
     path: '/lab',
-    name: 'Semua Lab',
-    component: () => import(/* webpackChunkName: "Semua Lab" */ '../views/Lab/Lab.vue'),
+    name: 'Lab',
+    component: () => import(/* webpackChunkName: "Lab" */ '../views/Lab/Lab.vue'),
+    beforeEnter: (to, from, next) => notAuthenticated(next)
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: () => import(/* webpackChunkName: "History" */ '../views/History/History.vue'),
     beforeEnter: (to, from, next) => notAuthenticated(next)
   },
   {

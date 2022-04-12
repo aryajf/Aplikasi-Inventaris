@@ -27,7 +27,6 @@ module.exports = {
                 [Op.like]: `%${keyword}%`
             }
         }
-        console.log(where)
         let barang = await Barang.findAll({
             where: where,
             include: [{

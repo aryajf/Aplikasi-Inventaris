@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 const auth = require('../controllers/auth')
 const barang = require('../controllers/barang')
 const table = require('../controllers/table')
+const history = require('../controllers/history')
 const chart = require('../controllers/chart')
 const category = require('../controllers/category')
 const pdf = require('../controllers/pdf')
@@ -39,6 +40,8 @@ router.get('/', async function(req, res, next) {
 })
 
 // AUTH
+router.get('/history', checkAuth, history.index)
+router.get('/history/:id', checkAuth, history.show)
 router.get('/all-barang', checkAuth, table.allBarang)
 router.get('/chart-type', checkAuth, chart.type)
 router.get('/chart-barang', checkAuth, chart.barang)

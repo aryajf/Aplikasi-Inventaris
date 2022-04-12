@@ -13,16 +13,27 @@
                         <img v-else src="@/assets/images/image-not-available.png" class="w-100" alt="gambar">
                     </div>
                     <div class="col-md-8 col-12 barang-box-heading">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h2>{{barang.title}}</h2>
-                            <h5 v-if="barang.category">{{barang.category.title}}</h5>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 v-if="user.role == 'Admin'">Lab {{barang.type}}</h5>
+                                <h2>{{barang.title}}</h2>
+                            </div>
+                            <div>
+                                <h5 v-if="barang.category">{{barang.category.title}}</h5>
+                            </div>
                         </div>
                         <p class="mt-1" v-html="barang.description"></p>
                     </div>
                 </div>
-                <div class="row mt-5">
+                <div class="mt-2">
+                    <span class="badge bg-purple py-2">Dibuat pada: {{DateFormat(barang.createdAt)}}</span>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-purple py-2">Diupdate pada: {{DateFormat(barang.updatedAt)}}</span>
+                </div>
+                <div class="row mt-2">
                     <div class="col-md-4 col-12 mb-3">
-                        <div class="count-box d-flex justify-content-between align-items-center bg-az">
+                        <div class="count-box d-flex justify-content-between align-items-center bg-purple">
                             <div>Total Stok</div>
                             <div class="stock" v-if="!isNaN(parseInt(barang.tersedia) + parseInt(barang.dipakai) + parseInt(barang.rusak))">{{ parseInt(barang.tersedia) + parseInt(barang.dipakai) + parseInt(barang.rusak) }}</div>
                             <div class="stock" v-else>Tidak Valid</div>
@@ -58,6 +69,18 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="barang-box bg-light rounded-top mt-3">
+                <div class="row">
+                    <div class="col">
+                        <template v-if="barang.histories && barang.histories.length !== 0">
+                            {{ barang.histories }}
+                        </template>
+                        <template v-else>
+                            <Message :closable="false" severity="info">Stok belum ditambahkan</Message>
+                        </template>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -3,6 +3,7 @@ import axios from 'axios'
 import auth from './modules/auth'
 import barang from './modules/barang'
 import category from './modules/category'
+import history from './modules/history'
 import user from './modules/user'
 
 export default createStore({
@@ -105,6 +106,7 @@ export default createStore({
     auth,
     barang,
     category,
+    history,
     user
   }
 })
