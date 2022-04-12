@@ -73,9 +73,34 @@
             <div class="barang-box bg-light rounded-top mt-3">
                 <div class="row">
                     <div class="col">
-                        <template v-if="barang.histories && barang.histories.length !== 0">
-                            {{ barang.histories }}
-                        </template>
+                        <div class="table-responsive" v-if="barang.histories && barang.histories.length !== 0">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="th-1">#</th>
+                                        <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
+                                        <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
+                                        <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
+                                        <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Ditambahkan oleh</th>
+                                        <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Diupdate pada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(history, index) in barang.histories" :key="history.id">
+                                        <td class="fw-bold text-center">{{ index+1 }}</td>
+                                        <td class="fw-bold text-center">{{history.tersedia}}</td>
+                                        <td class="fw-bold text-center">{{history.dipakai}}</td>
+                                        <td class="fw-bold text-center">{{history.rusak}}</td>
+                                        <td class="fw-bold text-center" v-if="history.user">
+                                            {{history.user.nama}}
+                                        </td>
+                                        <td class="fw-bold text-center">
+                                            {{DateFormat(history.updatedAt)}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <template v-else>
                             <Message :closable="false" severity="info">Stok belum ditambahkan</Message>
                         </template>

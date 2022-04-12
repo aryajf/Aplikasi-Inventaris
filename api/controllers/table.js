@@ -33,7 +33,7 @@ module.exports = {
             }
         }
 
-        await Barang.findAndCountAll({where: where, include: include, limit: limit, offset: offset, order:[['updatedAt', 'ASC']]}).then(async (data) => {
+        await Barang.findAndCountAll({where: where, include: include, limit: limit, offset: offset, order:[['updatedAt', 'DESC']]}).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){

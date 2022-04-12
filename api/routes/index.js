@@ -40,8 +40,7 @@ router.get('/', async function(req, res, next) {
 })
 
 // AUTH
-router.get('/history', checkAuth, history.index)
-router.get('/history/:id', checkAuth, history.show)
+router.get('/history', checkAuth, history.allHistory)
 router.get('/all-barang', checkAuth, table.allBarang)
 router.get('/chart-type', checkAuth, chart.type)
 router.get('/chart-barang', checkAuth, chart.barang)
@@ -53,7 +52,8 @@ router.put('/profile/updateAvatar', checkAuth, fileUpload.single('avatar'), auth
 router.post('/password/change', checkAuth, auth.changePassword)
 
 // PDF
-router.get('/pdf', checkAuth, pdf.index)
+router.get('/pdf-barang', checkAuth, pdf.barang)
+router.get('/pdf-history', checkAuth, pdf.history)
 
 // BARANG
 router.route('/barang')

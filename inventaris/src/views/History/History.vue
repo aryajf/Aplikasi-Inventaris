@@ -28,35 +28,53 @@
                             </div>
                         </div>
                     </div>
-                    <Button v-if="barang.barang && barang.totalItems != 0 && barang.length != 0" type="button" label="Unduh Laporan" icon="pi pi-download" iconPos="right" :loading="btnLoading" @click="downloadPdf()"/>
+                    <Button v-if="history.history && history.totalItems != 0 && history.length != 0" type="button" label="Unduh Laporan" icon="pi pi-download" iconPos="right" :loading="btnLoading" @click="downloadPdfHistory()"/>
                 </div>
-                <div class="table-responsive" v-if="barang.barang && barang.totalItems != 0 && barang.length != 0">
+                <div class="table-responsive" v-if="history.history && history.totalItems != 0 && history.length != 0">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col" class="th-1">#</th>
-                                <th scope="col" class="th-1"><i class="uil uil-package me-2"></i>Nama</th>
-                                <th scope="col" class="th-1"><i class="uil uil-tag-alt me-2"></i>Kategori</th>
-                                <th scope="col" class="th-1"><i class="uil uil-list-ul me-2"></i>Tipe</th>
+                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Nama</th>
                                 <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
                                 <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
                                 <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
+                                <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Ditambahkan oleh</th>
+                                <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Diupdate pada</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(barang, index) in barang.barang" :key="barang.id">
+                            <tr v-for="(history, index) in history.history" :key="history.id">
                                 <td class="fw-bold text-center">{{ index+1 }}</td>
-                                <td class="text-center"><router-link :to="'/barang/'+barang.id">{{barang.title}}</router-link></td>
-                                <td class="text-center">{{barang.category.title}}</td>
-                                <td class="text-center">{{barang.type}}</td>
-                                <td class="fw-bold text-center">{{barang.tersedia}}</td>
-                                <td class="fw-bold text-center">{{barang.dipakai}}</td>
-                                <td class="fw-bold text-center">{{barang.rusak}}</td>
+                                <td class="fw-bold text-center">
+                                    <div class="mb-1"><router-link :to="`/barang/${history.barang.id}`">{{history.barang.title}}</router-link></div>
+                                    <div><span class="badge bg-purple">Lab {{history.barang.type}}</span></div>
+                                </td>
+                                <td class="fw-bold text-center">{{history.tersedia}}</td>
+                                <td class="fw-bold text-center">{{history.dipakai}}</td>
+                                <td class="fw-bold text-center">{{history.rusak}}</td>
+                                <td class="fw-bold text-center" v-if="history.user">
+                                    <div class="mb-1">{{history.user.nama}}</div>
+                                    <div><a :href="'mailto:'+history.user.email" class="text-decoration-none d-block mb-1" title="Send Email">{{history.user.email}} <i class="uil uil-share ms-1"></i>
+                                    </a></div>
+                                    <div v-if="history.user.phone" class="badge bg-light text-dark">
+                                        <i class="uil uil-phone-alt me-1"></i>
+                                        <a :href="'https://api.whatsapp.com/send?phone=62'+history.user.phone" target="_blank" v-if="history.user.phone !== null">+62 {{history.user.phone}}</a>
+                                        <span v-else>belum ditambahkan</span>
+                                    </div>
+                                    <div v-else class="badge bg-light text-dark">
+                                        <i class="uil uil-phone-alt me-1"></i>
+                                        <span>belum ditambahkan</span>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-center">
+                                    {{DateFormat(history.updatedAt)}}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <Message v-else :closable="false" severity="info">Barang belum ditambahkan</Message>
+                <Message v-else :closable="false" severity="info">Riwayat belum ditambahkan</Message>
             </div>
         </div>
     </div>
@@ -80,35 +98,35 @@ export default {
     },
     watch: {
         type() {
-            this.getBarang()
+            this.getHistory()
         },
         keyword() {
-            this.getBarang()
+            this.getHistory()
         },
     },
     computed: {
         ...mapGetters({
-            barang: 'barang_lab',
+            history: 'history',
             searchLoading: "searchLoading",
             btnLoading: "btnLoading",
             user: 'auth/user',
         }),
     },
     created(){
-        this.getBarang()
+        this.getHistory()
     },
     components: { Chart, AdminHeader },
     methods: {
-        downloadPdf(){
-            this.$store.dispatch('downloadPdf',
+        downloadPdfHistory(){
+            this.$store.dispatch('downloadPdfHistory',
             {
                 type: this.type.name,
                 keyword: this.keyword
             }
             )
         },
-        getBarang(){
-            this.$store.dispatch('allBarang',
+        getHistory(){
+            this.$store.dispatch('allHistory',
             {
                 type: this.type.name,
                 keyword: this.keyword

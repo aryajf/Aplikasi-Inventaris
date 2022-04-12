@@ -53,7 +53,6 @@ module.exports = {
             limit,offset,order:[['updatedAt', 'ASC']]
         }).then(async (data) => {
             const { totalItems, dataPaginate, totalPages, currentPage } = getPagingData(data, page, limit)
-            console.log(dataPaginate)
             
             if(dataPaginate.length != 0 && !isNaN(currentPage)){
                 res.json({
@@ -275,17 +274,22 @@ module.exports = {
 }
 
 function findBarang(id){
-    return Barang.findOne({where: {id: id}, include: [{
-        model : Category,
-        as: 'category',
-    },{
-        model : History,
-        as: 'histories',
-        include: {
-            model : User,
-            as: 'user',
+    return Barang.findOne({
+        where: {id: id},
+        include: [{
+            model : Category,
+            as: 'category',
+        },{
+            model : History,
+            as: 'histories',
+            include: {
+                model : User,
+                as: 'user',
+            }
         }
-    }]})
+        ],
+        order: [['histories','updatedAt', 'desc']]
+    })
 }
 
 function barangValidation(dataRequest){
