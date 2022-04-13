@@ -51,7 +51,6 @@ export default createStore({
     async allHistory({commit}, data){
       try{
         let res
-        console.log(data)
         if(data){
           if(data.page == undefined){
             data.page = 0

@@ -1,9 +1,12 @@
 const {Category, Barang, History, User} = require('../models')
 const { Op } = require("sequelize")
+const path = require('path')
+const pdfHistoryPath = path.join(__dirname, '../public/pdf/history/')
+const pdfBarangPath = path.join(__dirname, '../public/pdf/barang/')
 const moment = require("moment/min/moment-with-locales")
 var pdf = require("pdf-creator-node")
 var fs = require("fs")
-const path = require('path')
+const {deleteFile} = require('../config/mixins')
 
 module.exports = {
     barang: async(req, res) => {
@@ -39,15 +42,16 @@ module.exports = {
         if(barang.length <= 0){
             res.status(404).json({message : 'Tipe tidak ditemukan', status: false})
         }else{
-            let pdfOutput = `public/pdf/semua-lab.pdf`
-            var html = fs.readFileSync(path.join(__dirname, '../views/pdf/semua-barang-template.html'), "utf8");
+            let nameFile = `barang-${now.getTime().toString()}.pdf`
+            let pdfOutput = `${pdfHistoryPath}${nameFile}`
+            var html = fs.readFileSync(path.join(__dirname, '../views/pdf/barang-template.html'), "utf8");
             var options = {
                 format: "A3",
                 orientation: "portrait",
                 border: "10mm",
                 header: {
                     height: "45mm",
-                    contents: '<h1 style="text-align: center;">Laporan Data Barang</h1>'
+                    contents: '<h1 style="text-align: center;">Laporan Barang</h1>'
                 },
             }
 
@@ -70,8 +74,11 @@ module.exports = {
 
             try{
                 await pdf.create(document, options)
+                setTimeout(()=>{
+                    deleteFile(pdfBarangPath + nameFile)
+                }, 30000)
                 res.json({
-                    pdf: process.env.BASE_URL + 'pdf/semua-lab.pdf',
+                    pdf: process.env.BASE_URL + `pdf/barang/${nameFile}`,
                     message: 'PDF berhasil ditampilkan',
                     request: {
                         method: req.method,
@@ -120,15 +127,17 @@ module.exports = {
         if(history.length <= 0){
             res.status(404).json({message : 'Tipe tidak ditemukan', status: false})
         }else{
-            let pdfOutput = `public/pdf/semua-history.pdf`
-            var html = fs.readFileSync(path.join(__dirname, '../views/pdf/semua-history-template.html'), "utf8");
+            const now = new Date()
+            let nameFile = `history-${now.getTime().toString()}.pdf`
+            let pdfOutput = `${pdfHistoryPath}${nameFile}`
+            var html = fs.readFileSync(path.join(__dirname, '../views/pdf/history-template.html'), "utf8");
             var options = {
                 format: "A3",
                 orientation: "portrait",
                 border: "10mm",
                 header: {
                     height: "45mm",
-                    contents: '<h1 style="text-align: center;">Laporan Data history</h1>'
+                    contents: '<h1 style="text-align: center;">Laporan Riwayat Stok</h1>'
                 },
             }
 
@@ -153,8 +162,11 @@ module.exports = {
 
             try{
                 await pdf.create(document, options)
+                setTimeout(()=>{
+                    deleteFile(pdfHistoryPath + nameFile)
+                }, 30000)
                 res.json({
-                    pdf: process.env.BASE_URL + 'pdf/semua-history.pdf',
+                    pdf: process.env.BASE_URL + `pdf/history/${nameFile}`,
                     message: 'PDF berhasil ditampilkan',
                     request: {
                         method: req.method,

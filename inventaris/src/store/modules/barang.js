@@ -73,6 +73,7 @@ export default({
                 commit('SET_BARANG', response.data.barang)
                 return response
             }catch(err){
+                router.push({name: 'Not Found'})
                 return err.response
             }
         },

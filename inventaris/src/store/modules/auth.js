@@ -74,7 +74,6 @@ export default({
                 dispatch('getProfile')
                 return res.data
             }).catch(err => {
-                console.log(err.response.data)
                 if(err.response.data.errors){
                     commit('SET_FORM_ERRORS', err.response.data.errors, {root: true})
                 }

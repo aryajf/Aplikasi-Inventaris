@@ -76,10 +76,13 @@ module.exports = {
     },
     show: async(req, res) => {
         try{
-            const barang = await findBarang(req.params.id)
+            const barang = await findBarang(req.params.id, req.decoded.role)
+            if(barang == null){
+                return res.status(404).json({message : 'Barang tidak ditemukan', status: false})
+            }
             res.json({
                 barang : barang,
-                message: 'Item berhasil ditampilkan',
+                message: 'Barang berhasil ditampilkan',
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'barang/' + req.params.id
@@ -87,7 +90,7 @@ module.exports = {
                 status: true
             })
         }catch(err){
-            res.status(404).json({message : 'Terjadi kesalahan saat menampilkan item', status: false})
+            res.status(404).json({message : 'Terjadi kesalahan saat menampilkan barang', status: false})
         }
     },
     store: async(req, res) => {
@@ -122,7 +125,7 @@ module.exports = {
                     id: barang.id,
                     title: barang.title,
                 },
-                message: 'Item berhasil ditambah',
+                message: 'Barang berhasil ditambah',
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'barang'
@@ -133,15 +136,15 @@ module.exports = {
             deleteFile(req.file.path)
             res.status(400).json({
                 error: err.message,
-                message: 'Terjadi kesalahan saat menambah item',
+                message: 'Terjadi kesalahan saat menambah barang',
                 status: false
             })
         }
     },
     update: async(req, res) => {
-        let barang = await findBarang(req.params.id)
+        let barang = await findBarang(req.params.id, req.decoded.role)
         if(barang == null){
-            res.status(404).json({message : 'Item tidak ditemukan', status: false})
+            res.status(404).json({message : 'Barang tidak ditemukan', status: false})
             deleteFile(req.file.path)
             return 
         }
@@ -182,7 +185,7 @@ module.exports = {
                     id: barang.id,
                     title: barang.title,
                 },
-                message: 'Item berhasil diubah',
+                message: 'Barang berhasil diubah',
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'barang/' + req.params.id
@@ -192,15 +195,15 @@ module.exports = {
         }catch(err){
             res.status(400).json({
                 error: err.message,
-                message: 'Terjadi kesalahan saat mengubah item',
+                message: 'Terjadi kesalahan saat mengubah barang',
                 status: false
             })
         }
     },
     updateStok: async(req, res) => {
-        let barang = await findBarang(req.params.id)
+        let barang = await findBarang(req.params.id, req.decoded.role)
         if(barang == null){
-            res.status(404).json({message : 'Item tidak ditemukan', status: false})
+            res.status(404).json({message : 'Barang tidak ditemukan', status: false})
             deleteFile(req.file.path)
             return 
         }
@@ -229,7 +232,7 @@ module.exports = {
                     id: barang.id,
                     title: barang.title,
                 },
-                message: 'Item berhasil diubah',
+                message: 'Barang berhasil diubah',
                 request: {
                     method: req.method,
                     url: process.env.BASE_URL + 'barang/stok/' + req.params.id
@@ -239,13 +242,13 @@ module.exports = {
         }catch(err){
             res.status(400).json({
                 error: err.message,
-                message: 'Terjadi kesalahan saat mengubah item',
+                message: 'Terjadi kesalahan saat mengubah barang',
                 status: false
             })
         }
     },
     delete: async(req, res) => {
-        let barang = await findBarang(req.params.id)
+        let barang = await findBarang(req.params.id, req.decoded.role)
         if(barang != null){
             deleteFile(barangGambarPath + barang.gambar)
 
@@ -254,7 +257,7 @@ module.exports = {
                 await Status.destroy({where: {barang_id: barang.id}})
 
                 res.json({
-                    message: 'Item berhasil dihapus',
+                    message: 'Barang berhasil dihapus',
                     request: {
                         method: req.method,
                         url: process.env.BASE_URL + 'barang/' + req.params.id
@@ -264,18 +267,24 @@ module.exports = {
             }catch(err){
                 res.status(400).json({
                     error: err.message,
-                    message: 'Terjadi kesalahan saat menghapus item',
+                    message: 'Terjadi kesalahan saat menghapus barang',
                     status: false
                 })
             }
-        }else{res.status(404).json({message : 'Item tidak ditemukan', status: false})}
+        }else{res.status(404).json({message : 'Barang tidak ditemukan', status: false})}
     },
     
 }
 
-function findBarang(id){
+function findBarang(id, role){
+    const where = {
+        id: id
+    }
+    if(role != 'Admin'){
+        where.type = role
+    }
     return Barang.findOne({
-        where: {id: id},
+        where: where,
         include: [{
             model : Category,
             as: 'category',

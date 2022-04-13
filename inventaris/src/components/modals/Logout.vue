@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Tidak</button>
-                    <button @click="logout" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Yakin</button>
+                    <button @click="logout" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-danger">Yakin</button>
                 </div>
             </div>
         </div>

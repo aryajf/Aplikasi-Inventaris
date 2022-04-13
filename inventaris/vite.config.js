@@ -10,9 +10,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',  
       manifest: {
-        "name":"Pojoklaku",
-        "short_name":"Pojoklaku",
-        "theme_color":"#F7AD28",
+        "name":"Inventaris",
+        "short_name":"Inventaris",
+        "theme_color":"#8463ff",
         "icons":[
           {"src":"./img/icons/android-chrome-192x192.png", "sizes":"192x192","type":"image/png"},
           {"src":"./img/icons/android-chrome-512x512.png", "sizes":"512x512", "type":"image/png"},

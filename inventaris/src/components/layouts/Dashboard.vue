@@ -47,7 +47,7 @@
                                 <p class="nav-heading">LAB MENU</p>
                                 <li class="nav-item">
                                     <router-link to="/lab" class="nav-link">
-                                        <i class="uil uil-edit me-2"></i> Semua Lab
+                                        <i class="uil uil-edit me-2"></i> Barang
                                     </router-link>
                                 </li>
                                 <li class="nav-item">
@@ -175,7 +175,7 @@
                                                 <p class="nav-heading">LAB MENU</p>
                                                 <li class="nav-item">
                                                     <router-link to="/lab" class="nav-link">
-                                                        <i class="uil uil-edit me-2"></i> Semua Lab
+                                                        <i class="uil uil-edit me-2"></i> Barang
                                                     </router-link>
                                                 </li>
                                                 <li class="nav-item">

@@ -30,50 +30,53 @@
                     </div>
                     <Button v-if="history.history && history.totalItems != 0 && history.length != 0" type="button" label="Unduh Laporan" icon="pi pi-download" iconPos="right" :loading="btnLoading" @click="downloadPdfHistory()"/>
                 </div>
-                <div class="table-responsive" v-if="history.history && history.totalItems != 0 && history.length != 0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="th-1">#</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Nama</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
-                                <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Ditambahkan oleh</th>
-                                <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Diupdate pada</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(history, index) in history.history" :key="history.id">
-                                <td class="fw-bold text-center">{{ index+1 }}</td>
-                                <td class="fw-bold text-center">
-                                    <div class="mb-1"><router-link :to="`/barang/${history.barang.id}`">{{history.barang.title}}</router-link></div>
-                                    <div><span class="badge bg-purple">Lab {{history.barang.type}}</span></div>
-                                </td>
-                                <td class="fw-bold text-center">{{history.tersedia}}</td>
-                                <td class="fw-bold text-center">{{history.dipakai}}</td>
-                                <td class="fw-bold text-center">{{history.rusak}}</td>
-                                <td class="fw-bold text-center" v-if="history.user">
-                                    <div class="mb-1">{{history.user.nama}}</div>
-                                    <div><a :href="'mailto:'+history.user.email" class="text-decoration-none d-block mb-1" title="Send Email">{{history.user.email}} <i class="uil uil-share ms-1"></i>
-                                    </a></div>
-                                    <div v-if="history.user.phone" class="badge bg-light text-dark">
-                                        <i class="uil uil-phone-alt me-1"></i>
-                                        <a :href="'https://api.whatsapp.com/send?phone=62'+history.user.phone" target="_blank" v-if="history.user.phone !== null">+62 {{history.user.phone}}</a>
-                                        <span v-else>belum ditambahkan</span>
-                                    </div>
-                                    <div v-else class="badge bg-light text-dark">
-                                        <i class="uil uil-phone-alt me-1"></i>
-                                        <span>belum ditambahkan</span>
-                                    </div>
-                                </td>
-                                <td class="fw-bold text-center">
-                                    {{DateFormat(history.updatedAt)}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <template v-if="history.history && history.totalItems != 0 && history.length != 0">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="th-1">#</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Nama</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Ditambahkan oleh</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-user me-2"></i>Diupdate pada</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(history, index) in history.history" :key="history.id">
+                                    <td class="fw-bold text-center">{{ index+1 }}</td>
+                                    <td class="fw-bold text-center">
+                                        <div class="mb-1"><router-link :to="`/barang/${history.barang.id}`">{{history.barang.title}}</router-link></div>
+                                        <div><span class="badge bg-purple">Lab {{history.barang.type}}</span></div>
+                                    </td>
+                                    <td class="fw-bold text-center">{{history.tersedia}}</td>
+                                    <td class="fw-bold text-center">{{history.dipakai}}</td>
+                                    <td class="fw-bold text-center">{{history.rusak}}</td>
+                                    <td class="fw-bold text-center" v-if="history.user">
+                                        <div class="mb-1">{{history.user.nama}}</div>
+                                        <div><a :href="'mailto:'+history.user.email" class="text-decoration-none d-block mb-1" title="Send Email">{{history.user.email}} <i class="uil uil-share ms-1"></i>
+                                        </a></div>
+                                        <div v-if="history.user.phone" class="badge bg-light text-dark">
+                                            <i class="uil uil-phone-alt me-1"></i>
+                                            <a :href="'https://api.whatsapp.com/send?phone=62'+history.user.phone" target="_blank" v-if="history.user.phone !== null">+62 {{history.user.phone}}</a>
+                                            <span v-else>belum ditambahkan</span>
+                                        </div>
+                                        <div v-else class="badge bg-light text-dark">
+                                            <i class="uil uil-phone-alt me-1"></i>
+                                            <span>belum ditambahkan</span>
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold text-center">
+                                        {{DateFormat(history.updatedAt)}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <Paginator v-if="history.totalPages >= 2" @page="changePage($event)" v-model:rows="history.limitItems" :totalRecords="history.totalItems" />
+                </template>
                 <Message v-else :closable="false" severity="info">Riwayat belum ditambahkan</Message>
             </div>
         </div>
@@ -132,7 +135,16 @@ export default {
                 keyword: this.keyword
             }
             )
-        }
+        },
+        changePage(event) {
+            this.$store.dispatch('allHistory',
+                {
+                    page: event.page,
+                    type: this.type.name,
+                    keyword: this.keyword
+                }
+            )
+        },
     }
 }
 </script>

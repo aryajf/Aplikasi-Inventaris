@@ -31,32 +31,35 @@
                     </div>
                     <Button v-if="barang.barang && barang.totalItems != 0 && barang.length != 0" type="button" label="Unduh Laporan" icon="pi pi-download" iconPos="right" :loading="btnLoading" @click="downloadPdf()"/>
                 </div>
-                <div class="table-responsive" v-if="barang.barang && barang.totalItems != 0 && barang.length != 0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="th-1">#</th>
-                                <th scope="col" class="th-1"><i class="uil uil-package me-2"></i>Nama</th>
-                                <th scope="col" class="th-1"><i class="uil uil-tag-alt me-2"></i>Kategori</th>
-                                <th scope="col" class="th-1"><i class="uil uil-list-ul me-2"></i>Tipe</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
-                                <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(barang, index) in barang.barang" :key="barang.id">
-                                <td class="fw-bold text-center">{{ index+1 }}</td>
-                                <td class="text-center"><router-link :to="'/barang/'+barang.id">{{barang.title}}</router-link></td>
-                                <td class="text-center">{{barang.category.title}}</td>
-                                <td class="text-center">{{barang.type}}</td>
-                                <td class="fw-bold text-center">{{barang.tersedia}}</td>
-                                <td class="fw-bold text-center">{{barang.dipakai}}</td>
-                                <td class="fw-bold text-center">{{barang.rusak}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <template v-if="barang.barang && barang.totalItems != 0 && barang.length != 0">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="th-1">#</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-package me-2"></i>Nama</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-tag-alt me-2"></i>Kategori</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-list-ul me-2"></i>Tipe</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Tersedia</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Dipakai</th>
+                                    <th scope="col" class="th-1"><i class="uil uil-box me-2"></i>Rusak</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(barang, index) in barang.barang" :key="barang.id">
+                                    <td class="fw-bold text-center">{{ index+1 }}</td>
+                                    <td class="text-center"><router-link :to="'/barang/'+barang.id">{{barang.title}}</router-link></td>
+                                    <td class="text-center">{{barang.category.title}}</td>
+                                    <td class="text-center">{{barang.type}}</td>
+                                    <td class="fw-bold text-center">{{barang.tersedia}}</td>
+                                    <td class="fw-bold text-center">{{barang.dipakai}}</td>
+                                    <td class="fw-bold text-center">{{barang.rusak}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <Paginator v-if="barang.totalPages >= 2" @page="changePage($event)" v-model:rows="barang.limitItems" :totalRecords="barang.totalItems" />
+                </template>
                 <Message v-else :closable="false" severity="info">Barang belum ditambahkan</Message>
             </div>
         </div>
@@ -115,7 +118,16 @@ export default {
                 keyword: this.keyword
             }
             )
-        }
+        },
+        changePage(event) {
+            this.$store.dispatch('allBarang',
+                {
+                    page: event.page,
+                    type: this.type.name,
+                    keyword: this.keyword
+                }
+            )
+        },
     }
 }
 </script>
