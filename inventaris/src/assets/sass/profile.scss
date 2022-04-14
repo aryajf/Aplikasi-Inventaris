@@ -1,0 +1,17 @@
+@import 'variables';
+.profile-menu {
+    margin-bottom: 20px;
+
+    button {
+        background: none;
+        padding: 7px 10px;
+        border-radius: 5px;
+        border: none;
+        margin-right: 5px;
+    }
+
+    .active {
+        color: $purple;
+        border-bottom: 2px solid $purple;
+    }
+}

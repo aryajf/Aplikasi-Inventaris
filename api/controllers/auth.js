@@ -41,7 +41,14 @@ module.exports = {
 
             user.update({token_expired_at: Date.now() + expiresToken})
 
-            const token = jwt.sign(user.toJSON(), JWT_SECRET, {
+            const authLog = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            }
+
+            const token = jwt.sign(authLog, JWT_SECRET, {
                 expiresIn: JWT_SECRET_EXPIRES
             })
 
